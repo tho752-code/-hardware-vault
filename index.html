@@ -770,74 +770,80 @@
         }
 
         async function submitRequestTicket() {
-            try {
-                const nameInput = document.getElementById("req-name");
-                const subteamSelect = document.getElementById("req-subteam");
-                const notesInput = document.getElementById("req-notes");
-                if (!nameInput || !subteamSelect || !notesInput) return;
+    try {
+        const nameInput = document.getElementById("req-name");
+        const subteamSelect = document.getElementById("req-subteam");
+        const notesInput = document.getElementById("req-notes");
+        if (!nameInput || !subteamSelect || !notesInput) return;
 
-                const name = nameInput.value.trim();
-                if (!name) {
-                    createToast("Verification Alert", "Please fill in a lead builder name signature to dispatch.", "warning");
-                    nameInput.focus();
-                    return;
-                }
-
-                const cartKeys = Object.keys(cart);
-                if (cartKeys.length === 0) {
-                    createToast("Action Aborted", "Cannot process an empty request list.", "warning");
-                    return;
-                }
-
-                cartKeys.forEach(key => {
-                    const id = parseInt(key);
-                    const invItem = inventory.find(i => Number(i.id) === Number(id));
-                    if (invItem) {
-                        invItem.stock = parseInt(invItem.stock) - parseInt(cart[key]);
-                    }
-                });
-
-                const orderedItems = cartKeys.map(key => {
-                    const id = parseInt(key);
-                    const invItem = inventory.find(i => Number(i.id) === Number(id));
-                    return {
-                        itemId: id,
-                        name: invItem ? invItem.name : "Unknown Component",
-                        sku: invItem ? (invItem.sku || "N/A") : "N/A",
-                        qty: cart[key],
-                        location: invItem ? invItem.location : "N/A"
-                    };
-                });
-
-                const newTicketPayload = {
-                    id: Date.now(),
-                    requester: name,
-                    subteam: subteamSelect.value,
-                    notes: notesInput.value.trim() || "No notes appended.",
-                    items: orderedItems,
-                    timestamp: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                    status: "Pending"
-                };
-
-                requests.unshift(newTicketPayload);
-                cart = {}; 
-                nameInput.value = "";
-                notesInput.value = "";
-
-                renderCartList();
-                updateGlobalBadges();
-                switchViewDirect("browse");
-
-                await transmitCloudMutation(
-                    "submitTicket", 
-                    { ticket: newTicketPayload, updatedInventory: inventory }, 
-                    "Ticket Dispatched", 
-                    `Filed ticket under identity: ${name}. Stock levels updated instantly.`
-                );
-            } catch (error) {
-                console.error("Critical submission trace:", error);
-            }
+        const name = nameInput.value.trim();
+        if (!name) {
+            createToast("Verification Alert", "Please fill in a lead builder name signature to dispatch.", "warning");
+            nameInput.focus();
+            return;
         }
+
+        const cartKeys = Object.keys(cart);
+        if (cartKeys.length === 0) {
+            createToast("Action Aborted", "Cannot process an empty request list.", "warning");
+            return;
+        }
+
+        // Subtract quantities from inventory locally
+        cartKeys.forEach(key => {
+            const id = parseInt(key);
+            const invItem = inventory.find(i => Number(i.id) === Number(id));
+            if (invItem) {
+                invItem.stock = parseInt(invItem.stock) - parseInt(cart[key]);
+            }
+        });
+
+        const orderedItems = cartKeys.map(key => {
+            const id = parseInt(key);
+            const invItem = inventory.find(i => Number(i.id) === Number(id));
+            return {
+                itemId: id,
+                name: invItem ? invItem.name : "Unknown Component",
+                sku: invItem ? (invItem.sku || "N/A") : "N/A",
+                qty: cart[key],
+                location: invItem ? invItem.location : "N/A"
+            };
+        });
+
+        const newTicketPayload = {
+            id: Date.now(),
+            requester: name,
+            subteam: subteamSelect.value,
+            notes: notesInput.value.trim() || "No notes appended.",
+            items: orderedItems,
+            timestamp: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            status: "Pending"
+        };
+
+        requests.unshift(newTicketPayload);
+        cart = {}; 
+        nameInput.value = "";
+        notesInput.value = "";
+
+        renderCartList();
+        updateGlobalBadges();
+        switchViewDirect("browse");
+
+        // TRANSMIT BOTH THE NEW TICKET AND THE FULL UPDATED INVENTORY TO CLOUD
+        await transmitCloudMutation(
+            "submitTicket", 
+            { ticket: newTicketPayload, updatedInventory: inventory }, 
+            "Ticket Dispatched", 
+            `Filed ticket under identity: ${name}. Stock levels updated automatically.`
+        );
+
+        // EXTRA SAFETY SYNC: Force bulk update on the backend inventory sheet
+        await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory }, "Stock Synced", "Inventory cloud database updated.");
+
+    } catch (error) {
+        console.error("Critical submission trace:", error);
+    }
+}
 
         function renderPublicHistory() {
             const container = document.getElementById("public-history-container");
