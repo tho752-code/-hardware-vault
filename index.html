@@ -50,6 +50,9 @@
                     Request List
                     <span id="cart-badge" class="hidden bg-amber-500 text-slate-950 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
                 </button>
+                <button id="nav-history" onclick="switchView('history')" class="px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 whitespace-nowrap text-slate-400 hover:text-slate-200">
+                    Confirmed Requests
+                </button>
                 <button id="nav-admin" onclick="switchView('admin')" class="px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 whitespace-nowrap text-slate-400 hover:text-slate-200 flex items-center gap-1.5">
                     Hardware Desk (Admin)
                     <span id="pending-badge" class="hidden bg-rose-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">0</span>
@@ -85,7 +88,7 @@
             
             <div class="space-y-1">
                 <label for="admin-passkey-input" class="block text-[10px] font-bold uppercase tracking-wider text-slate-500">Security Passkey</label>
-                <input type="password" id="admin-passkey-input" placeholder="Enter password (Default: 1111)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-220 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm tracking-widest font-mono">
+                <input type="password" id="admin-passkey-input" placeholder="Enter password (Default: 1111)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm tracking-widest font-mono">
                 <span id="auth-error-msg" class="text-xs text-rose-500 font-medium hidden">Incorrect passkey code. Verification failed.</span>
             </div>
 
@@ -132,7 +135,7 @@
                     </div>
                     <div>
                         <h4 class="text-sm font-semibold text-slate-200">FTC Shop Storage Rule</h4>
-                        <p class="text-xs text-slate-400">Queue requested items onto your sub-team manifest ticket and click submit. Do not collect equipment directly from bins without administrative checkout logs.</p>
+                        <p class="text-xs text-slate-400">Queue requested items onto your sub-team manifest ticket and click submit. Quantities will automatically subtract upon dispatch submission.</p>
                     </div>
                 </div>
             </div>
@@ -210,6 +213,19 @@
                         </button>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- ================= CONFIRMED REQUESTS HISTORY VIEW (PUBLIC) ================= -->
+        <section id="view-history" class="hidden space-y-6">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <div>
+                    <h3 class="text-xl font-bold text-slate-100">Confirmed Request Archive Log</h3>
+                    <p class="text-xs text-slate-400">Public ledger tracking all completed, fulfilled, or denied tool allocation vouchers.</p>
+                </div>
+            </div>
+            <div id="public-history-container" class="space-y-4">
+                <!-- Archive data rows injected dynamically here -->
             </div>
         </section>
 
@@ -321,40 +337,25 @@
         // =========================================================================
         // GOOGLE APPS SCRIPT WEB APP API URL CONFIGURATION
         // =========================================================================
-        // Paste your deployed deployment link inside the quotes below to enable synchronization.
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/a/macros/students.fairmontschools.com/s/AKfycbzi-eA-CeJrikQ3ocx36lFmc6NgnzVrbCRqN7__IkGzPPWo5DnBeNDxPzWNOW1eXpQm/exec"; 
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzi-eA-CeJrikQ3ocx36lFmc6NgnzVrbCRqN7__IkGzPPWo5DnBeNDxPzWNOW1eXpQm/exec"; 
 
-        // Core Default FTC Equipment Database Template Baseline
+        // Core Default Baseline Templates
         const DEFAULT_INVENTORY = [
             { id: 1, name: "REV Robotics Control Hub", sku: "REV-31-1595", category: "Motors & Control", stock: 3, location: "Cabinet Alpha - Bin A1" },
             { id: 2, name: "REV Robotics Expansion Hub", sku: "REV-31-1153", category: "Motors & Control", stock: 4, location: "Cabinet Alpha - Bin A2" },
             { id: 3, name: "GoBilda Yellow Jacket Motor (312 RPM)", sku: "GB-5202-0312", category: "Motors & Control", stock: 12, location: "Cabinet Alpha - Drawer B1" },
-            { id: 4, name: "GoBilda Yellow Jacket Motor (435 RPM)", sku: "GB-5202-0435", category: "Motors & Control", stock: 8, location: "Cabinet Alpha - Drawer B2" },
-            { id: 5, name: "REV Smart Robot Servo", sku: "REV-41-1097", category: "Motors & Control", stock: 10, location: "Cabinet Alpha - Bin A4" },
-            { id: 6, name: "GoBilda 1120 Series U-Channel (368mm)", sku: "GB-1120-0368", category: "Structural Elements", stock: 16, location: "Rack 1 - Shelf Upper" },
-            { id: 7, name: "GoBilda 1120 Series U-Channel (288mm)", sku: "GB-1120-0288", category: "Structural Elements", stock: 24, location: "Rack 1 - Shelf Upper" },
-            { id: 8, name: "GoBilda 90-Degree Dual Block Mount", sku: "GB-1201-0002", category: "Structural Elements", stock: 45, location: "Blue Grid Case - Box 2" },
-            { id: 10, name: "96mm GoBilda Rhino Track Wheels", sku: "GB-4004-0096", category: "Motion Components", stock: 8, location: "Rack 1 - Bin C1" },
-            { id: 11, name: "96mm Mecanum Wheels (Set of 4)", sku: "GB-4204-0096", category: "Motion Components", stock: 3, location: "Cabinet Beta - Box Large" },
-            { id: 12, name: "GoBilda Miter Gear (30-Tooth, Steel)", sku: "GB-2315-0030", category: "Motion Components", stock: 18, location: "Blue Grid Case - Box 5" },
-            { id: 13, name: "Ball Bearing 6mm ID x 14mm OD", sku: "GB-1601-0006", category: "Motion Components", stock: 60, location: "Small Organizers - Drawer D2" },
-            { id: 14, name: "M3 Hex Head Screw (8mm Length)", sku: "GB-2800-0008", category: "Fasteners & Spacers", stock: 250, location: "Fastener Wall - Bin F1" },
-            { id: 15, name: "M3 Hex Head Screw (12mm Length)", sku: "GB-2800-0012", category: "Fasteners & Spacers", stock: 180, location: "Fastener Wall - Bin F2" },
-            { id: 16, name: "GoBilda Zinc-Plated M3 Lock Nut", sku: "GB-2900-0003", category: "Fasteners & Spacers", stock: 400, location: "Fastener Wall - Bin F5" }
+            { id: 4, name: "GoBilda Yellow Jacket Motor (435 RPM)", sku: "GB-5202-0435", category: "Motors & Control", stock: 8, location: "Cabinet Alpha - Drawer B2" }
         ];
 
         const SECURITY_ADMIN_PASSKEY = "1111"; 
 
-        // Global Variable State Heap Configuration
+        // Global State Variables
         let inventory = [];
         let cart = {}; 
         let requests = [];
         let currentFilterCategory = "All";
         let isAdminAuthenticated = false;
 
-        // =========================================================================
-        // GLOBAL SCOPE INLINE LISTENER HELPER CODES (Prevents ReferenceError Exceptions)
-        // =========================================================================
         function adjustCardQuantityInput(itemId, delta, maxStock = 999) {
             const input = document.getElementById(`input-qty-${itemId}`);
             if (!input) return;
@@ -390,9 +391,7 @@
             renderPartsGrid();
         }
 
-        // Initialization Pipeline Lifecycle Orchestrator
         window.onload = async function() {
-            // Restore structural routing layout definition metrics
             const savedAuth = sessionStorage.getItem("robo_vault_auth");
             if (savedAuth === "true") {
                 isAdminAuthenticated = true;
@@ -412,6 +411,7 @@
             renderFilterTabs();
             renderPartsGrid();
             renderCartList();
+            renderPublicHistory();
             renderAdminView();
             updateGlobalBadges();
 
@@ -425,7 +425,6 @@
             });
         };
 
-        // Asynchronous Cloud Database Reader
         async function fetchCloudDatabaseRecords() {
             if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.trim() === "") return;
             try {
@@ -433,58 +432,44 @@
                 if (!response.ok) throw new Error("Failed to reach Apps Script deployment endpoint");
                 
                 const jsonResult = await response.json();
-                
                 if (jsonResult && jsonResult.status === "success") {
                     inventory = jsonResult.inventory || [];
                     requests = jsonResult.requests || [];
                     
                     localStorage.setItem("ftc_vault_inventory", JSON.stringify(inventory));
                     localStorage.setItem("ftc_vault_requests", JSON.stringify(requests));
-                    setCloudIndicatorState("online", "Cloud sync synchronized successfully.");
-                } else if (jsonResult && jsonResult.status === "error") {
-                    console.error("Sheet Configuration Error:", jsonResult.message);
-                    createToast("Database Schema Error", jsonResult.message, "error");
-                    loadLocalDatabaseFallback();
-                    setCloudIndicatorState("offline", "Tab name mismatch inside Google Sheets.");
+                    setCloudIndicatorState("online", "Cloud database status: Sync fully active.");
                 } else {
-                    throw new Error("Invalid response envelope structure.");
+                    throw new Error(jsonResult.message || "Invalid schema layout.");
                 }
             } catch (err) {
-                console.error("Cloud connectivity pipeline failed:", err);
+                console.error("Cloud connection dropped:", err);
                 loadLocalDatabaseFallback();
-                setCloudIndicatorState("offline", "Database connection offline. Local sandbox active.");
+                setCloudIndicatorState("offline", "Database network error. Local sandbox active.");
             }
         }
 
-        // Asynchronous Background Mutation Transmitter Pipeline (No Page Reloads)
         async function transmitCloudMutation(payloadAction, dataObj, successMessageTitle, successMessageBody) {
-            // Save state updates locally to cache cache boundaries instantly
             localStorage.setItem("ftc_vault_inventory", JSON.stringify(inventory));
             localStorage.setItem("ftc_vault_requests", JSON.stringify(requests));
             
             createToast(successMessageTitle, successMessageBody, "success");
 
-            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.trim() === "") {
-                return true;
-            }
+            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.trim() === "") return true;
 
             try {
                 setCloudIndicatorState("syncing", "Uploading cloud mutation logs...");
-                const bodyParams = { action: payloadAction, data: dataObj };
-                
                 await fetch(GOOGLE_SCRIPT_URL, {
                     method: "POST",
                     mode: "no-cors",
                     headers: { "Content-Type": "text/plain" },
-                    body: JSON.stringify(bodyParams)
+                    body: JSON.stringify({ action: payloadAction, data: dataObj })
                 });
-                
-                setCloudIndicatorState("online", "Cloud sync synchronized successfully.");
+                setCloudIndicatorState("online", "Cloud database status: Sync fully active.");
                 return true;
             } catch (error) {
-                console.error("Mutation dropped connection:", error);
-                createToast("Sync Warning", "Modification saved locally but failed to write to Google Sheets cloud grid.", "warning");
-                setCloudIndicatorState("offline", "Sync lagging. Intercepted networking trace.");
+                console.error("Cloud mutation dropped sync:", error);
+                setCloudIndicatorState("offline", "Database network lag encountered.");
                 return false;
             }
         }
@@ -495,31 +480,20 @@
             renderFilterTabs();
             renderPartsGrid();
             renderCartList();
+            renderPublicHistory();
             renderAdminView();
             updateGlobalBadges();
             createToast("Data Synchronized", "Live Google Sheets dataset compiled cleanly.", "success");
         }
 
         function loadLocalDatabaseFallback() {
-            if (localStorage.getItem("ftc_vault_inventory")) {
-                inventory = JSON.parse(localStorage.getItem("ftc_vault_inventory"));
-            } else {
-                inventory = [...DEFAULT_INVENTORY];
-                localStorage.setItem("ftc_vault_inventory", JSON.stringify(inventory));
-            }
-
-            if (localStorage.getItem("ftc_vault_requests")) {
-                requests = JSON.parse(localStorage.getItem("ftc_vault_requests"));
-            } else {
-                requests = [];
-                localStorage.setItem("ftc_vault_requests", JSON.stringify(requests));
-            }
+            inventory = localStorage.getItem("ftc_vault_inventory") ? JSON.parse(localStorage.getItem("ftc_vault_inventory")) : [...DEFAULT_INVENTORY];
+            requests = localStorage.getItem("ftc_vault_requests") ? JSON.parse(localStorage.getItem("ftc_vault_requests")) : [];
         }
 
         function setCloudIndicatorState(state, traceMsg) {
             const statusBox = document.getElementById("sync-status-text");
             if (!statusBox) return;
-
             if (state === "syncing") {
                 statusBox.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block animate-spin"></span><span class="text-amber-400 font-medium">${traceMsg}</span>`;
             } else if (state === "online") {
@@ -529,7 +503,6 @@
             }
         }
 
-        // Layout Router Actions
         function switchView(target) {
             if (target === "admin" && !isAdminAuthenticated) {
                 openAdminAuthModal();
@@ -540,7 +513,7 @@
 
         function switchViewDirect(target) {
             sessionStorage.setItem("robo_vault_view", target);
-            const views = ["browse", "cart", "admin"];
+            const views = ["browse", "cart", "history", "admin"];
             views.forEach(v => {
                 const el = document.getElementById(`view-${v}`);
                 if (el) el.classList.replace("block", "hidden");
@@ -556,6 +529,7 @@
 
             if (target === "browse") renderPartsGrid();
             if (target === "cart") renderCartList();
+            if (target === "history") renderPublicHistory();
             if (target === "admin") renderAdminView();
         }
 
@@ -572,19 +546,15 @@
 
         function verifyAdminPasskey() {
             const inputField = document.getElementById("admin-passkey-input");
-            const errorLabel = document.getElementById("auth-error-msg");
-
             if (inputField.value === SECURITY_ADMIN_PASSKEY) {
                 isAdminAuthenticated = true;
                 sessionStorage.setItem("robo_vault_auth", "true");
-                errorLabel.classList.add("hidden");
                 closeAdminAuthModal();
                 createToast("Authentication Confirmed", "Admin terminal dashboard unlocked.", "success");
                 switchView("admin");
             } else {
-                errorLabel.classList.remove("hidden");
+                document.getElementById("auth-error-msg").classList.remove("hidden");
                 inputField.select();
-                inputField.focus();
             }
         }
 
@@ -606,19 +576,17 @@
             const ticketsView = document.getElementById("admin-subview-tickets");
             const inventoryView = document.getElementById("admin-subview-inventory");
 
-            if (!ticketsBtn || !inventoryBtn || !ticketsView || !inventoryView) return;
-
             if (subtab === "tickets") {
-                ticketsBtn.className = "border-b-2 border-amber-500 pb-2 px-2 text-sm font-bold text-amber-400 transition-all";
-                inventoryBtn.className = "border-b-2 border-transparent pb-2 px-2 text-sm font-semibold text-slate-400 hover:text-slate-200 transition-all";
-                ticketsView.classList.replace("hidden", "block");
-                inventoryView.classList.replace("block", "hidden");
+                if(ticketsBtn) ticketsBtn.className = "border-b-2 border-amber-500 pb-2 px-2 text-sm font-bold text-amber-400 transition-all";
+                if(inventoryBtn) inventoryBtn.className = "border-b-2 border-transparent pb-2 px-2 text-sm font-semibold text-slate-400 hover:text-slate-200 transition-all";
+                if(ticketsView) ticketsView.classList.replace("hidden", "block");
+                if(inventoryView) inventoryView.classList.replace("block", "hidden");
                 renderTicketsQueue();
             } else {
-                inventoryBtn.className = "border-b-2 border-amber-500 pb-2 px-2 text-sm font-bold text-amber-400 transition-all";
-                ticketsBtn.className = "border-b-2 border-transparent pb-2 px-2 text-sm font-semibold text-slate-400 hover:text-slate-200 transition-all";
-                inventoryView.classList.replace("hidden", "block");
-                ticketsView.classList.replace("block", "hidden");
+                if(inventoryBtn) inventoryBtn.className = "border-b-2 border-amber-500 pb-2 px-2 text-sm font-bold text-amber-400 transition-all";
+                if(ticketsBtn) ticketsBtn.className = "border-b-2 border-transparent pb-2 px-2 text-sm font-semibold text-slate-400 hover:text-slate-200 transition-all";
+                if(inventoryView) inventoryView.classList.replace("hidden", "block");
+                if(ticketsView) ticketsView.classList.replace("block", "hidden");
                 renderAdminInventoryTable();
             }
         }
@@ -666,7 +634,6 @@
                     
                     const isOutOfStock = parseInt(item.stock) <= 0;
                     const cardCartQty = cart[item.id] || 0;
-                    const itemSku = item.sku || "N/A";
 
                     card.innerHTML = `
                         <div class="space-y-2">
@@ -675,7 +642,7 @@
                                 <span class="text-xs text-slate-500 font-mono tracking-tight">${item.location.split(' - ')[1] || item.location}</span>
                             </div>
                             <div class="space-y-0.5">
-                                <span class="text-[11px] font-mono font-semibold text-amber-500/90 tracking-wide block">SKU: ${itemSku}</span>
+                                <span class="text-[11px] font-mono font-semibold text-amber-500/90 tracking-wide block">SKU: ${item.sku || 'N/A'}</span>
                                 <h4 class="font-bold text-slate-100 group-hover:text-amber-400 transition-colors line-clamp-2 min-h-[2.5rem]">${item.name}</h4>
                             </div>
                             <div class="flex items-center gap-1.5 text-xs text-slate-400">
@@ -686,13 +653,12 @@
 
                         <div class="mt-4 pt-3 border-t border-slate-900 flex items-center justify-between gap-2">
                             <div class="flex items-center bg-slate-900 border border-slate-800 rounded-md overflow-hidden">
-                                <button onclick="adjustCardQuantityInput(${item.id}, -1)" ${isOutOfStock ? 'disabled' : ''} class="px-2 py-1 hover:bg-slate-800 text-slate-400 font-bold transition-all text-sm disabled:opacity-40">-</button>
-                                <input type="number" id="input-qty-${item.id}" min="1" max="${item.stock}" value="1" ${isOutOfStock ? 'disabled' : ''} class="w-10 bg-transparent text-center font-bold text-xs text-slate-200 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
-                                <button onclick="adjustCardQuantityInput(${item.id}, 1, ${item.stock})" ${isOutOfStock ? 'disabled' : ''} class="px-2 py-1 hover:bg-slate-800 text-slate-400 font-bold transition-all text-sm disabled:opacity-40">+</button>
+                                <button onclick="adjustCardQuantityInput(${item.id}, -1)" ${isOutOfStock ? 'disabled' : ''} class="px-2 py-1 hover:bg-slate-800 text-slate-400 font-bold text-sm disabled:opacity-40">-</button>
+                                <input type="number" id="input-qty-${item.id}" min="1" max="${item.stock}" value="1" ${isOutOfStock ? 'disabled' : ''} class="w-10 bg-transparent text-center font-bold text-xs text-slate-200 focus:outline-none">
+                                <button onclick="adjustCardQuantityInput(${item.id}, 1, ${item.stock})" ${isOutOfStock ? 'disabled' : ''} class="px-2 py-1 hover:bg-slate-800 text-slate-400 font-bold text-sm disabled:opacity-40">+</button>
                             </div>
 
-                            <button onclick="addToCartTicket(${item.id})" ${isOutOfStock ? 'disabled' : ''} class="flex-1 text-xs font-bold py-2 px-2.5 rounded bg-slate-800 text-amber-400 border border-amber-500/20 hover:bg-amber-500 hover:text-slate-950 transition-all duration-200 flex items-center justify-center gap-1 shadow-sm disabled:opacity-30 disabled:hover:bg-slate-800 disabled:hover:text-slate-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                            <button onclick="addToCartTicket(${item.id})" ${isOutOfStock ? 'disabled' : ''} class="flex-1 text-xs font-bold py-2 px-2.5 rounded bg-slate-800 text-amber-400 border border-amber-500/20 hover:bg-amber-500 hover:text-slate-950 transition-all duration-200 flex items-center justify-center gap-1 disabled:opacity-30">
                                 Add to List ${cardCartQty > 0 ? `(${cardCartQty})` : ''}
                             </button>
                         </div>
@@ -735,7 +701,6 @@
                     <div class="text-center py-16 text-slate-500">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-slate-700 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
                         <p class="text-sm font-medium">Your request manifest is blank.</p>
-                        <button onclick="switchView('browse')" class="mt-3 text-xs font-semibold text-amber-500 hover:text-amber-400">Go Browse Hardware Vault →</button>
                     </div>
                 `;
                 document.getElementById("cart-total-types").innerText = "0";
@@ -749,30 +714,22 @@
                 const item = inventory.find(i => Number(i.id) === Number(itemId));
                 if (!item) return;
 
-                const qty = cart[key];
-                const row = document.createElement("div");
-                row.className = "py-3 flex justify-between items-center gap-4 transition-all";
+                row = document.createElement("div");
+                row.className = "py-3 flex justify-between items-center gap-4";
                 row.innerHTML = `
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2 truncate">
                             <span class="text-[10px] font-mono bg-slate-900 border border-slate-800 text-amber-400 px-1 py-0.5 rounded flex-shrink-0">${item.sku || 'No SKU'}</span>
                             <h4 class="font-semibold text-slate-200 text-sm truncate">${item.name}</h4>
                         </div>
-                        <div class="flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-slate-400 mt-0.5">
-                            <span>Storage Area Bin: <strong class="text-slate-300">${item.location}</strong></span>
-                            <span>Max Available: ${item.stock}</span>
-                        </div>
                     </div>
-
                     <div class="flex items-center gap-4">
                         <div class="flex items-center bg-slate-900 border border-slate-800 rounded">
                             <button onclick="changeCartItemQty(${itemId}, -1)" class="px-2 py-0.5 hover:bg-slate-800 text-slate-400 font-bold text-xs">-</button>
-                            <span class="w-8 text-center text-xs font-mono font-bold text-amber-400">${qty}</span>
+                            <span class="w-8 text-center text-xs font-mono font-bold text-amber-400">${cart[key]}</span>
                             <button onclick="changeCartItemQty(${itemId}, 1)" class="px-2 py-0.5 hover:bg-slate-800 text-slate-400 font-bold text-xs">+</button>
                         </div>
-                        <button onclick="removeCartItemNode(${itemId})" class="text-slate-500 hover:text-rose-400 transition-colors p-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                        </button>
+                        <button onclick="removeCartItemNode(${itemId})" class="text-slate-500 hover:text-rose-400 p-1">✕</button>
                     </div>
                 `;
                 container.appendChild(row);
@@ -790,7 +747,6 @@
                 removeCartItemNode(itemId);
                 return;
             }
-
             if (currentQty > parseInt(item.stock)) {
                 createToast("Insufficient Stock", "Cannot request more units than what is left in storage bins.", "warning");
                 return;
@@ -805,7 +761,6 @@
             delete cart[itemId];
             updateGlobalBadges();
             renderCartList();
-            createToast("Item Removed", "Component entry cleared from ticket draft.", "warning");
         }
 
         function clearCart() {
@@ -814,13 +769,12 @@
             renderCartList();
         }
 
-        // Core Post Modification Local-First Sync Triggers (No Flashing/Refreshing needed)
+        // DISPATCH LIFE CYCLE REDESIGN: Subtracts quantities local-first instantly upon submission
         async function submitRequestTicket() {
             try {
                 const nameInput = document.getElementById("req-name");
                 const subteamSelect = document.getElementById("req-subteam");
                 const notesInput = document.getElementById("req-notes");
-
                 if (!nameInput || !subteamSelect || !notesInput) return;
 
                 const name = nameInput.value.trim();
@@ -832,16 +786,25 @@
 
                 const cartKeys = Object.keys(cart);
                 if (cartKeys.length === 0) {
-                    createToast("Action Aborted", "Cannot append or process an empty parts list request.", "warning");
+                    createToast("Action Aborted", "Cannot process an empty request list.", "warning");
                     return;
                 }
+
+                // Deduct stock levels LOCALLY right now before transmitting
+                cartKeys.forEach(key => {
+                    const id = parseInt(key);
+                    const invItem = inventory.find(i => Number(i.id) === Number(id));
+                    if (invItem) {
+                        invItem.stock = parseInt(invItem.stock) - parseInt(cart[key]);
+                    }
+                });
 
                 const orderedItems = cartKeys.map(key => {
                     const id = parseInt(key);
                     const invItem = inventory.find(i => Number(i.id) === Number(id));
                     return {
                         itemId: id,
-                        name: invItem ? invItem.name : "Unknown Component Node",
+                        name: invItem ? invItem.name : "Unknown Component",
                         sku: invItem ? (invItem.sku || "N/A") : "N/A",
                         qty: cart[key],
                         location: invItem ? invItem.location : "N/A"
@@ -852,40 +815,82 @@
                     id: Date.now(),
                     requester: name,
                     subteam: subteamSelect.value,
-                    notes: notesInput.value.trim() || "No log notes appended.",
+                    notes: notesInput.value.trim() || "No notes appended.",
                     items: orderedItems,
-                    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    timestamp: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                     status: "Pending"
                 };
 
-                // Update Local UI instantly
                 requests.unshift(newTicketPayload);
-                cart = {}; // Completely wipe selection list parameters instantly
+                cart = {}; 
                 nameInput.value = "";
                 notesInput.value = "";
 
-                // Re-render interfaces right away
                 renderCartList();
-                renderAdminView();
                 updateGlobalBadges();
                 switchViewDirect("browse");
 
-                // Transmit mutation in the background
+                // Transmit ticket schema and current overall corrected snapshot status down to spreadsheet rows
                 await transmitCloudMutation(
                     "submitTicket", 
-                    newTicketPayload, 
+                    { ticket: newTicketPayload, updatedInventory: inventory }, 
                     "Ticket Dispatched", 
-                    `Successfully filed checkout ticket under identity signature: ${name}.`
+                    `Filed ticket under identity: ${name}. Stock levels updated instantly.`
                 );
             } catch (error) {
-                console.error("Critical core submission exception captured:", error);
-                createToast("Submission Failure", `Diagnostic Error Trace: ${error.message}`, "error");
+                console.error("Critical submission trace:", error);
             }
+        }
+
+        // PUBLIC HISTORY ARCHIVE VIEWER TAB ENGINE
+        function renderPublicHistory() {
+            const container = document.getElementById("public-history-container");
+            if (!container) return;
+            container.innerHTML = "";
+
+            const confirmedRequests = requests.filter(r => r.status === "Fulfilled" || r.status === "Denied");
+
+            if (confirmedRequests.length === 0) {
+                container.innerHTML = `<div class="text-center py-12 bg-slate-950 rounded-xl border border-slate-800 text-slate-500 text-sm">No historical confirmed requests logged yet.</div>`;
+                return;
+            }
+
+            confirmedRequests.forEach(ticket => {
+                const historyCard = document.createElement("div");
+                const isFulfilled = ticket.status === "Fulfilled";
+                const borderClass = isFulfilled ? "border-emerald-950 bg-slate-950/40" : "border-rose-950 bg-slate-950/40";
+                
+                historyCard.className = `p-4 rounded-xl border ${borderClass} space-y-3`;
+                
+                let lineItems = "";
+                const itemsArray = Array.isArray(ticket.items) ? ticket.items : [];
+                itemsArray.forEach(itm => {
+                    lineItems += `
+                        <li class="text-xs text-slate-300">
+                            <span class="font-mono text-amber-500">[${itm.sku || 'N/A'}]</span> ${itm.name} <strong class="text-slate-100 ml-1">x${itm.qty}</strong>
+                        </li>
+                    `;
+                });
+
+                historyCard.innerHTML = `
+                    <div class="flex justify-between items-start border-b border-slate-900 pb-2">
+                        <div>
+                            <span class="text-sm font-bold text-slate-200">${ticket.requester}</span>
+                            <span class="text-[10px] ml-2 px-1.5 py-0.5 font-mono bg-slate-900 text-slate-400 rounded">${ticket.subteam}</span>
+                            <p class="text-[10px] text-slate-500 font-mono mt-0.5">Processed on ${ticket.timestamp}</p>
+                        </div>
+                        <span class="text-xs px-2.5 py-0.5 rounded-full font-bold ${isFulfilled ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}">${ticket.status}</span>
+                    </div>
+                    <ul class="list-disc list-inside space-y-0.5 pl-1">${lineItems}</ul>
+                    <div class="text-xs text-slate-500 bg-slate-900/20 px-2 py-1.5 rounded">Notes: "${ticket.notes}"</div>
+                `;
+                container.appendChild(historyCard);
+            });
         }
 
         function renderAdminView() {
             const ordersBadge = document.getElementById("admin-total-orders");
-            if (ordersBadge) ordersBadge.innerText = requests.length;
+            if (ordersBadge) ordersBadge.innerText = requests.filter(r => r.status === "Pending").length;
             renderTicketsQueue();
         }
 
@@ -894,72 +899,43 @@
             if (!container) return;
             container.innerHTML = "";
 
-            if (requests.length === 0) {
-                container.innerHTML = `<div class="text-center py-12 bg-slate-950 rounded-xl border border-slate-800 text-slate-500 text-sm">No active allocation tickets found inside queue stacks.</div>`;
+            const pendingTickets = requests.filter(r => r.status === "Pending");
+
+            if (pendingTickets.length === 0) {
+                container.innerHTML = `<div class="text-center py-12 bg-slate-950 rounded-xl border border-slate-800 text-slate-500 text-sm">No pending allocation tickets left inside queue stack rows.</div>`;
                 return;
             }
 
-            requests.forEach(ticket => {
+            pendingTickets.forEach(ticket => {
                 const ticketCard = document.createElement("div");
-                const isPending = ticket.status === "Pending";
-                const borderClass = isPending ? "border-amber-500/40 bg-slate-950" : "border-slate-800/80 bg-slate-950/40";
-                
-                ticketCard.className = `p-4 rounded-xl border ${borderClass} space-y-3 shadow`;
+                ticketCard.className = "p-4 rounded-xl border border-amber-500/40 bg-slate-950 space-y-3 shadow";
                 
                 let itemsListHtml = "";
-                const partsArray = Array.isArray(ticket.items) ? ticket.items : [];
-                
-                partsArray.forEach(itm => {
+                ticket.items.forEach(itm => {
                     itemsListHtml += `
                         <li class="text-xs flex items-center justify-between bg-slate-900 px-2.5 py-1.5 rounded border border-slate-800/50">
                             <span class="text-slate-200 font-medium">
-                                <span class="text-[10px] font-mono text-amber-500/80 mr-2">[${itm.sku || 'N/A'}]</span>
+                                <span class="text-[10px] font-mono text-amber-400 mr-2">[${itm.sku || 'N/A'}]</span>
                                 ${itm.name} 
-                                <span class="text-slate-500 font-mono text-[10px] ml-2">(${itm.location || ''})</span>
                             </span>
-                            <span class="bg-slate-800 px-2 py-0.5 text-amber-400 font-mono font-bold border border-slate-700 rounded text-[11px]">x${itm.qty}</span>
+                            <span class="bg-slate-800 px-2 py-0.5 text-amber-400 font-mono font-bold rounded text-[11px]">x${itm.qty}</span>
                         </li>
                     `;
                 });
 
                 ticketCard.innerHTML = `
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-900 pb-2">
+                    <div class="flex justify-between items-center border-b border-slate-900 pb-2">
                         <div>
-                            <div class="flex items-center gap-2">
-                                <h4 class="font-bold text-slate-100 text-sm">${ticket.requester}</h4>
-                                <span class="text-[10px] px-1.5 py-0.5 rounded font-semibold bg-slate-900 text-slate-400 border border-slate-800">${ticket.subteam}</span>
-                            </div>
-                            <p class="text-[11px] text-slate-500 font-mono mt-0.5">Submitted at ${ticket.timestamp || ''}</p>
-                        </div>
-                        <div>
-                            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold ${isPending ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30' : ticket.status === 'Fulfilled' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-slate-800 text-slate-400'}">${ticket.status}</span>
+                            <h4 class="font-bold text-slate-100 text-sm">${ticket.requester} <span class="text-[10px] font-normal text-slate-400 bg-slate-900 px-1.5 py-0.5 rounded ml-2">${ticket.subteam}</span></h4>
+                            <p class="text-[11px] text-slate-500 font-mono">Dispatched at ${ticket.timestamp}</p>
                         </div>
                     </div>
-
-                    <div class="space-y-1">
-                        <span class="text-[10px] uppercase font-bold tracking-wider text-slate-500 block">Parts Pull Manifest:</span>
-                        <ul class="space-y-1">${itemsListHtml}</ul>
-                    </div>
-
-                    <div class="text-xs text-slate-400 italic bg-slate-900/40 px-2 py-1.5 rounded border border-slate-900">
-                        <span class="text-[10px] uppercase font-bold tracking-wider text-slate-500 not-italic block mb-0.5">Log note:</span>
-                        "${ticket.notes}"
-                    </div>
-
-                    ${isPending ? `
+                    <ul class="space-y-1">${itemsListHtml}</ul>
+                    <p class="text-xs text-slate-400 italic bg-slate-900/30 p-2 rounded">Log note: "${ticket.notes}"</p>
                     <div class="flex justify-end gap-2 pt-2 border-t border-slate-900">
-                        <button onclick="rejectTicket(${ticket.id})" class="px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-rose-400 font-medium text-xs transition-all">
-                            Deny Voucher
-                        </button>
-                        <button onclick="fulfillTicket(${ticket.id})" class="px-4 py-1.5 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-all shadow-sm">
-                            Fulfill & Deduct Stock
-                        </button>
+                        <button onclick="rejectTicket(${ticket.id})" class="px-3 py-1.5 rounded bg-slate-900 border border-slate-700 text-rose-400 text-xs font-semibold">Deny Request</button>
+                        <button onclick="fulfillTicket(${ticket.id})" class="px-4 py-1.5 rounded bg-emerald-600 text-white font-bold text-xs shadow-sm">Approve & Fulfill</button>
                     </div>
-                    ` : `
-                    <div class="flex justify-end pt-1">
-                        <button onclick="clearTicketLogEntry(${ticket.id})" class="text-[10px] text-slate-600 hover:text-slate-400 font-mono">Archive Record</button>
-                    </div>
-                    `}
                 `;
                 container.appendChild(ticketCard);
             });
@@ -969,46 +945,30 @@
             const ticket = requests.find(r => Number(r.id) === Number(ticketId));
             if (!ticket) return;
 
-            let validationPass = true;
-            let offendingItem = "";
-
-            ticket.items.forEach(itm => {
-                const invItem = inventory.find(i => Number(i.id) === Number(itm.itemId));
-                if (!invItem || parseInt(invItem.stock) < parseInt(itm.qty)) {
-                    validationPass = false;
-                    offendingItem = itm.name;
-                }
-            });
-
-            if (!validationPass) {
-                createToast("Fulfillment Error", `Insufficient container stock left for "${offendingItem}".`, "error");
-                return;
-            }
-
-            // Deduct stock values locally and update status right away
-            ticket.items.forEach(itm => {
-                const invItem = inventory.find(i => Number(i.id) === Number(itm.itemId));
-                if (invItem) invItem.stock = parseInt(invItem.stock) - parseInt(itm.qty);
-            });
-
             ticket.status = "Fulfilled";
-
-            // Re-render arrays instantly
             renderAdminView();
             updateGlobalBadges();
 
-            // Background transmission
             await transmitCloudMutation(
                 "fulfillTicket", 
-                { ticketId: ticketId, updatedInventory: inventory },
-                "Voucher Processed",
-                `Released components to ${ticket.requester}. Cloud spreadsheet rows updated.`
+                { ticketId: ticketId },
+                "Voucher Approved",
+                "Allocation confirmed. Items officially deployed."
             );
         }
 
+        // RESTORE LOGIC RECONCILIATION: Adds items back to local inventory if request is rejected/denied
         async function rejectTicket(ticketId) {
             const ticket = requests.find(r => Number(r.id) === Number(ticketId));
             if (!ticket) return;
+
+            // Restore stock counts locally because the items were denied allocation
+            ticket.items.forEach(itm => {
+                const invItem = inventory.find(i => Number(i.id) === Number(itm.itemId));
+                if (invItem) {
+                    invItem.stock = parseInt(invItem.stock) + parseInt(itm.qty);
+                }
+            });
 
             ticket.status = "Denied";
             renderAdminView();
@@ -1016,21 +976,9 @@
 
             await transmitCloudMutation(
                 "rejectTicket", 
-                { ticketId: ticketId },
-                "Voucher Revoked",
-                `Marked request ticket submitted by ${ticket.requester} as denied.`
-            );
-        }
-
-        async function clearTicketLogEntry(ticketId) {
-            requests = requests.filter(r => Number(r.id) !== Number(ticketId));
-            renderAdminView();
-            
-            await transmitCloudMutation(
-                "deleteTicketLog", 
-                { ticketId: ticketId },
-                "Log Entry Scrubbed",
-                "Scrubbed archived historical deployment metadata record node."
+                { ticketId: ticketId, restoredInventory: inventory },
+                "Request Denied",
+                "Voucher marked as Denied. Component stock volumes safely restored."
             );
         }
 
@@ -1044,22 +992,20 @@
                 row.className = "hover:bg-slate-900/60 border-b border-slate-800/40 text-slate-300";
                 row.innerHTML = `
                     <td class="p-3 font-medium text-slate-100">${item.name}</td>
-                    <td class="p-3 font-mono text-xs text-amber-500 font-semibold">${item.sku || '—'}</td>
+                    <td class="p-3 font-mono text-xs text-amber-400 font-semibold">${item.sku || '—'}</td>
                     <td class="p-3 text-xs text-slate-400"><span class="bg-slate-900 border border-slate-800 px-2 py-0.5 rounded text-slate-400">${item.category}</span></td>
                     <td class="p-3 font-mono text-xs text-slate-400">${item.location}</td>
                     <td class="p-3 text-center">
                         <div class="flex items-center justify-center gap-2">
-                            <button onclick="quickUpdateStock(${item.id}, -5)" class="bg-slate-800 hover:bg-slate-700 text-slate-400 text-xs px-1 rounded">-5</button>
-                            <button onclick="quickUpdateStock(${item.id}, -1)" class="bg-slate-800 hover:bg-slate-700 text-slate-400 text-xs px-1.5 rounded">-1</button>
+                            <button onclick="quickUpdateStock(${item.id}, -5)" class="bg-slate-800 text-slate-400 text-xs px-1 rounded">-5</button>
+                            <button onclick="quickUpdateStock(${item.id}, -1)" class="bg-slate-800 text-slate-400 text-xs px-1.5 rounded">-1</button>
                             <span id="admin-stock-val-${item.id}" class="w-10 text-center font-mono font-bold text-amber-400 text-xs">${item.stock}</span>
-                            <button onclick="quickUpdateStock(${item.id}, 1)" class="bg-slate-800 hover:bg-slate-700 text-slate-400 text-xs px-1.5 rounded">+1</button>
-                            <button onclick="quickUpdateStock(${item.id}, 5)" class="bg-slate-800 hover:bg-slate-700 text-slate-400 text-xs px-1 rounded">+5</button>
+                            <button onclick="quickUpdateStock(${item.id}, 1)" class="bg-slate-800 text-slate-400 text-xs px-1.5 rounded">+1</button>
+                            <button onclick="quickUpdateStock(${item.id}, 5)" class="bg-slate-800 text-slate-400 text-xs px-1 rounded">+5</button>
                         </div>
                     </td>
                     <td class="p-3 text-right">
-                        <button onclick="deleteInventoryItemSchema(${item.id})" class="text-rose-500 hover:text-rose-400 transition-colors p-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                        </button>
+                        <button onclick="deleteInventoryItemSchema(${item.id})" class="text-rose-500 hover:text-rose-400 p-1">✕</button>
                     </td>
                 `;
                 tbody.appendChild(row);
@@ -1079,109 +1025,51 @@
                 "modifyStockCount", 
                 { itemId: itemId, newStock: item.stock },
                 "Quantity Matrix Saved",
-                `Adjusted available capacity parameters for component footprint: ${item.name}.`
+                `Directly updated capacity metrics row for ${item.name}.`
             );
         }
 
-        function openNewItemModal() {
-            document.getElementById("new-item-drawer").classList.remove("hidden");
-        }
-
-        function closeNewItemModal() {
-            document.getElementById("new-item-drawer").classList.add("hidden");
-            document.getElementById("add-item-name").value = "";
-            document.getElementById("add-item-sku").value = "";
-            document.getElementById("add-item-stock").value = "";
-            document.getElementById("add-item-location").value = "";
-        }
+        function openNewItemModal() { document.getElementById("new-item-drawer").classList.remove("hidden"); }
+        function closeNewItemModal() { document.getElementById("new-item-drawer").classList.add("hidden"); }
 
         async function saveNewItem() {
-            const nameEl = document.getElementById("add-item-name");
-            const skuEl = document.getElementById("add-item-sku");
-            const catEl = document.getElementById("add-item-category");
-            const stockEl = document.getElementById("add-item-stock");
-            const locEl = document.getElementById("add-item-location");
-
-            const name = nameEl.value.trim();
-            const sku = skuEl.value.trim().toUpperCase() || "N/A";
-            const category = catEl.value;
-            const stock = parseInt(stockEl.value) || 0;
-            const location = locEl.value.trim() || "Unassigned Storage Drawer";
+            const name = document.getElementById("add-item-name").value.trim();
+            const sku = document.getElementById("add-item-sku").value.trim().toUpperCase() || "N/A";
+            const category = document.getElementById("add-item-category").value;
+            const stock = parseInt(document.getElementById("add-item-stock").value) || 0;
+            const location = document.getElementById("add-item-location").value.trim() || "Unassigned Shelf Bin";
 
             if (!name) {
-                createToast("Validation Error", "Item profiles require a valid alphanumeric name.", "warning");
+                createToast("Validation Error", "Item profiles require a valid name footprint.", "warning");
                 return;
             }
 
-            const newItemNode = {
-                id: Date.now(),
-                name: name,
-                sku: sku,
-                category: category,
-                stock: stock >= 0 ? stock : 0,
-                location: location
-            };
-
+            const newItemNode = { id: Date.now(), name: name, sku: sku, category: category, stock: stock, location: location };
             inventory.push(newItemNode);
             renderAdminInventoryTable();
             closeNewItemModal();
 
-            await transmitCloudMutation(
-                "addNewItem", 
-                newItemNode,
-                "Catalog Expanded",
-                `Successfully loaded profile metrics registry parameters for ${name}.`
-            );
+            await transmitCloudMutation("addNewItem", newItemNode, "Catalog Expanded", `Loaded registry parameters for ${name}.`);
         }
 
         async function deleteInventoryItemSchema(itemId) {
             const target = inventory.find(i => Number(i.id) === Number(itemId));
             if (!target) return;
-            
-            const targetName = target.name;
             inventory = inventory.filter(i => Number(i.id) !== Number(itemId));
-            if (cart[itemId]) delete cart[itemId];
-
             renderAdminInventoryTable();
 
-            await transmitCloudMutation(
-                "purgeItemSchema", 
-                { itemId: itemId },
-                "Profile Purged",
-                `Scrubbed descriptive row metadata for ${targetName} out of storage databases.`
-            );
+            await transmitCloudMutation("purgeItemSchema", { itemId: itemId }, "Profile Purged", `Scrubbed row metrics for ${target.name}.`);
         }
 
-        // Notification Custom Toast UI Engine Renderer
         function createToast(title, message, type = "success") {
             const container = document.getElementById("toast-container");
             if (!container) return;
             const toast = document.createElement("div");
-            
-            const colorClasses = type === "success" 
-                ? "bg-slate-900 border-emerald-500 text-emerald-400" 
-                : type === "warning" ? "bg-slate-900 border-amber-500 text-amber-400" : "bg-slate-900 border-rose-500 text-rose-400";
-
-            toast.className = `border-l-4 p-4 rounded-lg shadow-xl flex items-start gap-3 transition-all duration-300 transform translate-y-2 opacity-0 ${colorClasses}`;
-            
-            toast.innerHTML = `
-                <div class="flex-1">
-                    <h5 class="font-bold text-sm text-slate-100">${title}</h5>
-                    <p class="text-xs text-slate-400 mt-0.5">${message}</p>
-                </div>
-                <button class="text-slate-500 hover:text-slate-300 text-xs font-bold" onclick="this.parentElement.remove()">✕</button>
-            `;
-            
+            const colorClasses = type === "success" ? "bg-slate-900 border-emerald-500 text-emerald-400" : type === "warning" ? "bg-slate-900 border-amber-500 text-amber-400" : "bg-slate-900 border-rose-500 text-rose-400";
+            toast.className = `border-l-4 p-4 rounded-lg shadow-xl flex items-start gap-3 transition-all duration-300 transform translate-y-2 ${colorClasses}`;
+            toast.innerHTML = `<div class="flex-1"><h5 class="font-bold text-sm text-slate-100">${title}</h5><p class="text-xs text-slate-400 mt-0.5">${message}</p></div><button class="text-slate-500 hover:text-slate-300 text-xs font-bold" onclick="this.parentElement.remove()">✕</button>`;
             container.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.classList.remove("translate-y-2", "opacity-0");
-            }, 10);
-
-            setTimeout(() => {
-                toast.classList.add("opacity-0", "translate-y-[-8px]");
-                setTimeout(() => toast.remove(), 300);
-            }, 4200);
+            setTimeout(() => toast.remove(), 4000);
         }
     </script>
 </body>
