@@ -110,8 +110,7 @@
                 
                 <div class="flex flex-wrap gap-2 w-full md:w-auto items-center">
                     <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider hidden sm:inline">Filter:</span>
-                    <div id="category-filters" class="flex flex-wrap gap-2">
-                        </div>
+                    <div id="category-filters" class="flex flex-wrap gap-2"></div>
                 </div>
             </div>
 
@@ -124,13 +123,12 @@
                     </div>
                     <div>
                         <h4 class="text-sm font-semibold text-slate-200">FTC Shop Storage Rule</h4>
-                        <p class="text-xs text-slate-400">Queue requested items onto your sub-team manifest ticket and click submit. Quantities will automatically subtract upon dispatch submission.</p>
+                        <p class="text-xs text-slate-400">Queue requested items onto your sub-team manifest ticket and click submit. Quantities update instantly in the cloud upon dispatch submission.</p>
                     </div>
                 </div>
             </div>
 
-            <div id="parts-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                </div>
+            <div id="parts-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
             
             <div id="empty-browse-state" class="hidden text-center py-12 bg-slate-950 rounded-xl border border-slate-800">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-slate-600 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -152,9 +150,7 @@
                                 Empty Draft
                             </button>
                         </div>
-
-                        <div id="cart-items-container" class="divide-y divide-slate-800/60 max-h-[60vh] overflow-y-auto pr-2">
-                            </div>
+                        <div id="cart-items-container" class="divide-y divide-slate-800/60 max-h-[60vh] overflow-y-auto pr-2"></div>
                     </div>
                 </div>
 
@@ -206,8 +202,7 @@
                     <p class="text-xs text-slate-400">Public ledger tracking all completed, fulfilled, or denied tool allocation vouchers from your Google Sheet.</p>
                 </div>
             </div>
-            <div id="public-history-container" class="space-y-4">
-                </div>
+            <div id="public-history-container" class="space-y-4"></div>
         </section>
 
         <section id="view-admin" class="hidden space-y-6">
@@ -240,8 +235,7 @@
                         Total System Requests Cached: <span id="admin-total-orders" class="font-bold text-amber-400">0</span>
                     </div>
                 </div>
-                <div id="tickets-queue-container" class="space-y-4">
-                    </div>
+                <div id="tickets-queue-container" class="space-y-4"></div>
             </div>
 
             <div id="admin-subview-inventory" class="space-y-4 hidden">
@@ -290,8 +284,7 @@
                                     <th class="p-3 text-right">Action Vectors</th>
                                 </tr>
                             </thead>
-                            <tbody id="admin-inventory-table" class="divide-y divide-slate-800/40 text-sm">
-                                </tbody>
+                            <tbody id="admin-inventory-table" class="divide-y divide-slate-800/40 text-sm"></tbody>
                         </table>
                     </div>
                 </div>
@@ -304,12 +297,8 @@
     </footer>
 
     <script>
-        // =========================================================================
-        // GOOGLE APPS SCRIPT WEB APP API URL CONFIGURATION
-        // =========================================================================
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbySc8WsDPxAUB_jgOjaLc5swRYQhaH-TPPStkkvPqyBFhRp1T_nKXvB4xQWABZJnNGJ/exec"; 
 
-        // Core Default Baseline Templates
         const DEFAULT_INVENTORY = [
             { id: 1, name: "REV Robotics Control Hub", sku: "REV-31-1595", category: "Motors & Control", stock: 3, location: "Cabinet Alpha - Bin A1" },
             { id: 2, name: "REV Robotics Expansion Hub", sku: "REV-31-1153", category: "Motors & Control", stock: 4, location: "Cabinet Alpha - Bin A2" },
@@ -319,7 +308,6 @@
 
         const SECURITY_ADMIN_PASSKEY = "1111"; 
 
-        // Global State Variables
         let inventory = [];
         let cart = {}; 
         let requests = [];
@@ -399,7 +387,7 @@
             if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.trim() === "") return;
             try {
                 const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getData`, { method: "GET" });
-                if (!response.ok) throw new Error("Failed to reach Apps Script deployment endpoint");
+                if (!response.ok) throw new Error("Failed to reach Apps Script endpoint");
                 
                 const jsonResult = await response.json();
                 if (jsonResult && jsonResult.status === "success") {
@@ -741,6 +729,7 @@
             renderCartList();
         }
 
+        // FULLY AUTOMATED SUBMIT TICKET (No manual save required)
         async function submitRequestTicket() {
             try {
                 const nameInput = document.getElementById("req-name");
@@ -800,7 +789,7 @@
                 updateGlobalBadges();
                 switchViewDirect("browse");
 
-                // AUTOMATED SUBMIT SYNC: Send ticket and bulk update stock immediately
+                // Transmit ticket & bulk inventory sync instantly to Google Sheet
                 await transmitCloudMutation(
                     "submitTicket", 
                     { ticket: newTicketPayload, updatedInventory: inventory }, 
@@ -929,30 +918,35 @@
             );
         }
 
+        // FULLY AUTOMATED REJECT TICKET (Updates values back and automatically updates Google Sheet)
         async function rejectTicket(ticketId) {
-            const ticket = requests.find(r => Number(r.id) === Number(ticketId));
-            if (!ticket) return;
+            try {
+                const ticket = requests.find(r => Number(r.id) === Number(ticketId));
+                if (!ticket) return;
 
-            ticket.items.forEach(itm => {
-                const invItem = inventory.find(i => Number(i.id) === Number(itm.itemId));
-                if (invItem) {
-                    invItem.stock = parseInt(invItem.stock) + parseInt(itm.qty);
-                }
-            });
+                ticket.items.forEach(itm => {
+                    const invItem = inventory.find(i => Number(i.id) === Number(itm.itemId));
+                    if (invItem) {
+                        invItem.stock = parseInt(invItem.stock) + parseInt(itm.qty);
+                    }
+                });
 
-            ticket.status = "Denied";
-            renderAdminView();
-            updateGlobalBadges();
+                ticket.status = "Denied";
+                renderAdminView();
+                updateGlobalBadges();
 
-            // AUTOMATED REJECTION SYNC: Send status update and bulk sync restored stock immediately
-            await transmitCloudMutation(
-                "rejectTicket", 
-                { ticketId: ticketId, restoredInventory: inventory },
-                "Request Denied",
-                "Voucher marked as Denied. Component stock volumes safely restored."
-            );
+                await transmitCloudMutation(
+                    "rejectTicket", 
+                    { ticketId: ticketId, restoredInventory: inventory },
+                    "Request Denied",
+                    "Voucher marked as Denied. Component stock volumes safely restored."
+                );
 
-            await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory }, null, null);
+                await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory }, null, null);
+
+            } catch (error) {
+                console.error("Critical rejection trace:", error);
+            }
         }
 
         function renderAdminInventoryTable() {
@@ -1012,8 +1006,8 @@
             }
 
             await transmitCloudMutation(
-                "modifyStockCount", 
-                { itemId: itemId, newStock: item.stock },
+                "bulkUpdateInventory", 
+                { inventory: inventory },
                 "Quantity Matrix Saved",
                 `Directly committed corrected capacity logs to cloud rows for ${item.name}.`
             );
@@ -1039,7 +1033,7 @@
             renderAdminInventoryTable();
             closeNewItemModal();
 
-            await transmitCloudMutation("addNewItem", newItemNode, "Catalog Expanded", `Loaded registry parameters for ${name}.`);
+            await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory }, "Catalog Expanded", `Loaded registry parameters for ${name}.`);
         }
 
         async function deleteInventoryItemSchema(itemId) {
@@ -1048,7 +1042,7 @@
             inventory = inventory.filter(i => Number(i.id) !== Number(itemId));
             renderAdminInventoryTable();
 
-            await transmitCloudMutation("purgeItemSchema", { itemId: itemId }, "Profile Purged", `Scrubbed row metrics for ${target.name}.`);
+            await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory }, "Profile Purged", `Scrubbed row metrics for ${target.name}.`);
         }
 
         function createToast(title, message, type = "success") {
