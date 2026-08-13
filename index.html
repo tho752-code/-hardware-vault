@@ -142,7 +142,7 @@
 
             <!-- Dynamic Part Catalog Grid Matrix -->
             <div id="parts-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                <!-- Cards appended via Javascript runtime template layout parsing loops -->
+                <!-- Cards appended via Javascript template layout parsing loops -->
             </div>
             
             <div id="empty-browse-state" class="hidden text-center py-12 bg-slate-950 rounded-xl border border-slate-800">
@@ -208,7 +208,7 @@
                         </div>
 
                         <button onclick="submitRequestTicket()" class="w-full bg-amber-500 text-slate-950 font-bold py-2.5 px-4 rounded-lg hover:bg-amber-400 transition-all duration-200 shadow flex items-center justify-center gap-2 mt-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-5 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 00-2-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-5 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
                             Dispatch Vault Ticket
                         </button>
                     </div>
@@ -221,7 +221,7 @@
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
                 <div>
                     <h3 class="text-xl font-bold text-slate-100">Confirmed Request Archive Log</h3>
-                    <p class="text-xs text-slate-400">Public ledger tracking all completed, fulfilled, or denied tool allocation vouchers.</p>
+                    <p class="text-xs text-slate-400">Public ledger tracking all completed, fulfilled, or denied tool allocation vouchers from your Google Sheet.</p>
                 </div>
             </div>
             <div id="public-history-container" class="space-y-4">
@@ -337,7 +337,7 @@
         // =========================================================================
         // GOOGLE APPS SCRIPT WEB APP API URL CONFIGURATION
         // =========================================================================
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzi-eA-CeJrikQ3ocx36lFmc6NgnzVrbCRqN7__IkGzPPWo5DnBeNDxPzWNOW1eXpQm/exec"; 
+        const GOOGLE_SCRIPT_URL = ""; 
 
         // Core Default Baseline Templates
         const DEFAULT_INVENTORY = [
@@ -714,7 +714,7 @@
                 const item = inventory.find(i => Number(i.id) === Number(itemId));
                 if (!item) return;
 
-                row = document.createElement("div");
+                const row = document.createElement("div");
                 row.className = "py-3 flex justify-between items-center gap-4";
                 row.innerHTML = `
                     <div class="flex-1 min-w-0">
