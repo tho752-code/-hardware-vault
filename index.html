@@ -7,7 +7,7 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom scrollbar styling for a tech aesthetic */
+        /* Custom scrollbar styling for a streamlined technical aesthetic */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -26,7 +26,7 @@
 </head>
 <body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col">
 
-    <!-- Top Navigation Bar -->
+    <!-- Top Navigation Bar Header Context -->
     <header class="bg-slate-950 border-b border-slate-800 sticky top-0 z-50 px-4 py-3 shadow-md">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
@@ -41,7 +41,7 @@
                 </div>
             </div>
 
-            <!-- View Toggles -->
+            <!-- Global View Router Navigation Toggles -->
             <nav class="flex items-center bg-slate-900 p-1 rounded-lg border border-slate-800 w-full sm:w-auto overflow-x-auto">
                 <button id="nav-browse" onclick="switchView('browse')" class="px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 whitespace-nowrap bg-amber-500 text-slate-950 shadow-sm">
                     Browse Parts
@@ -58,11 +58,11 @@
         </div>
     </header>
 
-    <!-- App Dynamic Toast System -->
+    <!-- App Dynamic Notification Toast System Layout Container -->
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-md w-full px-4 sm:px-0"></div>
 
-    <!-- Cloud Sync Status Bar Indicator -->
-    <div id="sync-status-bar" class="bg-slate-950 text-[11px] px-4 py-1.5 border-b border-slate-800/60 hidden text-slate-450">
+    <!-- Cloud Sync Connection Status Indicator Panel -->
+    <div id="sync-status-bar" class="bg-slate-950 text-[11px] px-4 py-1.5 border-b border-slate-800/60 hidden text-slate-400">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <span id="sync-status-text" class="flex items-center gap-1.5">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
@@ -72,7 +72,7 @@
         </div>
     </div>
 
-    <!-- Admin Authentication Modal Overlay -->
+    <!-- Admin Authorization Passcode Input Modal Overlay -->
     <div id="admin-auth-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 max-w-sm w-full shadow-2xl space-y-4 transform transition-all scale-95">
             <div class="flex items-center gap-3 text-amber-400">
@@ -81,11 +81,11 @@
                 </svg>
                 <h3 class="font-bold text-lg text-slate-100">Desk Authorization Required</h3>
             </div>
-            <p class="text-xs text-slate-400">Please provide your team's hardware manager security key to access control logs, fulfill allocation requests, or change quantities.</p>
+            <p class="text-xs text-slate-400">Please provide your team's hardware manager security key to access control logs, fulfill allocation requests, or edit item rows.</p>
             
             <div class="space-y-1">
                 <label for="admin-passkey-input" class="block text-[10px] font-bold uppercase tracking-wider text-slate-500">Security Passkey</label>
-                <input type="password" id="admin-passkey-input" placeholder="Enter password" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm tracking-widest font-mono">
+                <input type="password" id="admin-passkey-input" placeholder="Enter password (Default: 1111)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-220 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm tracking-widest font-mono">
                 <span id="auth-error-msg" class="text-xs text-rose-500 font-medium hidden">Incorrect passkey code. Verification failed.</span>
             </div>
 
@@ -100,29 +100,29 @@
         </div>
     </div>
 
-    <!-- Main Container -->
+    <!-- Application View Scaffolding Container -->
     <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:py-6">
         
-        <!-- BROWSE INVENTORY VIEW -->
+        <!-- ================= BROWSE INVENTORY VIEW ================= -->
         <section id="view-browse" class="block space-y-6">
-            <!-- Search & Controls -->
+            <!-- Search Control Inputs & Filters Block -->
             <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col md:flex-row gap-4 items-center justify-between shadow-lg">
                 <div class="relative w-full md:max-w-md">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                     </span>
-                    <input type="text" id="search-input" oninput="filterInventory()" placeholder="Search components by name, SKU, or bin location..." class="w-full bg-slate-900 border border-slate-700 rounded-lg pl-10 pr-4 py-2.5 text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-slate-500">
+                    <input type="text" id="search-input" oninput="filterInventory()" placeholder="Search hardware by name, SKU part number, or drawer..." class="w-full bg-slate-900 border border-slate-700 rounded-lg pl-10 pr-4 py-2.5 text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-slate-500">
                 </div>
                 
                 <div class="flex flex-wrap gap-2 w-full md:w-auto items-center">
                     <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider hidden sm:inline">Filter:</span>
                     <div id="category-filters" class="flex flex-wrap gap-2">
-                        <!-- Dynamic Categories Generated via JavaScript -->
+                        <!-- Categories rendering pipeline hook -->
                     </div>
                 </div>
             </div>
 
-            <!-- Hardware Room Warning Label -->
+            <!-- FTC Workspace Compliance Notice Banner -->
             <div class="bg-slate-950 rounded-xl p-4 border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-3 shadow-sm">
                 <div class="flex items-center gap-3">
                     <div class="text-amber-500 flex-shrink-0">
@@ -131,59 +131,59 @@
                         </svg>
                     </div>
                     <div>
-                        <h4 class="text-sm font-semibold text-slate-200">FTC Shop Rule</h4>
-                        <p class="text-xs text-slate-400">Add parts to your request list, add your sub-team/name, and submit. Do not grab items directly out of storage bins without processing.</p>
+                        <h4 class="text-sm font-semibold text-slate-200">FTC Shop Storage Rule</h4>
+                        <p class="text-xs text-slate-400">Queue requested items onto your sub-team manifest ticket and click submit. Do not collect equipment directly from bins without administrative checkout logs.</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Part Grid Matrix -->
+            <!-- Dynamic Part Catalog Grid Matrix -->
             <div id="parts-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                <!-- Dynamic Item Cards Generated via JavaScript -->
+                <!-- Cards appended via Javascript runtime template layout parsing loops -->
             </div>
             
             <div id="empty-browse-state" class="hidden text-center py-12 bg-slate-950 rounded-xl border border-slate-800">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-slate-600 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                <p class="text-slate-400 font-medium">No hardware components found matching that search query.</p>
+                <p class="text-slate-400 font-medium">No hardware room matching catalog definitions found for that parameter search query.</p>
             </div>
         </section>
 
-        <!-- CART / ACTIVE REQUEST VIEW -->
+        <!-- ================= CART / ACTIVE REQUEST LIST VIEW ================= -->
         <section id="view-cart" class="hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Cart Items List -->
+                <!-- Selection Manifest Queue Block -->
                 <div class="lg:col-span-2 space-y-4">
                     <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 shadow-md">
                         <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-2">
                             <h3 class="font-bold text-lg text-slate-200 flex items-center gap-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
-                                Selected Hardware Items
+                                Checked Hardware Rows Manifest
                             </h3>
                             <button onclick="clearCart()" class="text-xs text-rose-400 hover:text-rose-300 font-medium flex items-center gap-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                                Empty List
+                                Empty Draft
                             </button>
                         </div>
 
                         <div id="cart-items-container" class="divide-y divide-slate-800/60 max-h-[60vh] overflow-y-auto pr-2">
-                            <!-- Dynamic Cart Items Generated via JavaScript -->
+                            <!-- Items drawn dynamically -->
                         </div>
                     </div>
                 </div>
 
-                <!-- Request Form Submission Block -->
+                <!-- Sub-team Allocation Ticket Submission Block Form -->
                 <div class="space-y-4">
                     <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 shadow-md space-y-4">
-                        <h3 class="font-bold text-lg text-slate-200">Hardware Allocation Ticket</h3>
-                        <p class="text-xs text-slate-400">Fill in the deployment details below to submit your collection voucher to the mentor/parts lead on desk.</p>
+                        <h3 class="font-bold text-lg text-slate-200">Submit Collection Voucher</h3>
+                        <p class="text-xs text-slate-400">Assign an identification name and sub-division group to register your parts request checkout signature.</p>
                         
                         <div class="space-y-3">
                             <div>
-                                <label for="req-name" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Your Name / Core Lead</label>
+                                <label for="req-name" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Lead Requester Name</label>
                                 <input type="text" id="req-name" placeholder="e.g., Alex Johnson" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
                             </div>
                             <div>
-                                <label for="req-subteam" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Robotics Sub-Team Division</label>
+                                <label for="req-subteam" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Robot Sub-System Division</label>
                                 <select id="req-subteam" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
                                     <option value="Chassis / Drivetrain">Chassis / Drivetrain</option>
                                     <option value="Intake Mechanism">Intake Mechanism</option>
@@ -194,42 +194,42 @@
                                 </select>
                             </div>
                             <div>
-                                <label for="req-notes" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Purpose / Engineering Notebook Note</label>
-                                <textarea id="req-notes" rows="3" placeholder="e.g., Installing secondary lift stage slide anchors..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm resize-none"></textarea>
+                                <label for="req-notes" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Purpose / Engineering Log Notes</label>
+                                <textarea id="req-notes" rows="3" placeholder="e.g., Mounting secondary linear slide anchors..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm resize-none"></textarea>
                             </div>
                         </div>
 
                         <div class="border-t border-slate-800 pt-3 flex justify-between items-center text-sm">
-                            <span class="text-slate-400">Total Unique Parts:</span>
+                            <span class="text-slate-400">Unique Components:</span>
                             <span id="cart-total-types" class="font-bold text-amber-400">0</span>
                         </div>
 
                         <button onclick="submitRequestTicket()" class="w-full bg-amber-500 text-slate-950 font-bold py-2.5 px-4 rounded-lg hover:bg-amber-400 transition-all duration-200 shadow flex items-center justify-center gap-2 mt-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-5 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
-                            Submit Dispatch Ticket
+                            Dispatch Vault Ticket
                         </button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ADMIN DESK / MANAGEMENT VIEW -->
+        <!-- ================= HARDWARE DESK MANAGEMENT PANEL (ADMIN VIEW) ================= -->
         <section id="view-admin" class="hidden space-y-6">
-            <!-- Admin Security Status Bar -->
+            <!-- Security Access Operational Metrics Header Panel -->
             <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 px-4 flex justify-between items-center shadow-inner">
                 <div class="flex items-center gap-2 text-xs">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span class="text-slate-400">Terminal Authorization Status: <strong class="text-emerald-400">Admin Session Unlocked</strong></span>
+                    <span class="text-slate-400">System Terminal Access Level: <strong class="text-emerald-400">Authorized Desk Mode</strong></span>
                 </div>
                 <button onclick="lockAdminSession()" class="text-[11px] font-bold text-rose-400 bg-slate-900 border border-slate-800 hover:bg-rose-950/20 px-2.5 py-1 rounded transition-colors flex items-center gap-1">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
-                    Lock Terminal
+                    Lock Session
                 </button>
             </div>
 
-            <!-- Admin View Tabs -->
+            <!-- Admin Sub-view Tab Routers -->
             <div class="border-b border-slate-800 flex gap-4">
                 <button id="admin-tab-tickets" onclick="switchAdminSubTab('tickets')" class="border-b-2 border-amber-500 pb-2 px-2 text-sm font-bold text-amber-400 transition-all">
                     Active Dispatch Tickets
@@ -239,42 +239,39 @@
                 </button>
             </div>
 
-            <!-- SUB TAB 1: TICKETS QUEUE -->
+            <!-- SUB TAB 1: TICKETS ALLOCATION DISPATCH QUEUE -->
             <div id="admin-subview-tickets" class="space-y-4 block">
                 <div class="flex justify-between items-center">
-                    <h3 class="text-lg font-bold text-slate-200 flex items-center gap-2">
-                        Incoming Vault Dispatch Queue
-                    </h3>
+                    <h3 class="text-lg font-bold text-slate-200">Pending Vault Dispatch Heap</h3>
                     <div class="text-xs text-slate-400 bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-lg">
-                        Total Requests Stored: <span id="admin-total-orders" class="font-bold text-amber-400">0</span>
+                        Total System Requests Cached: <span id="admin-total-orders" class="font-bold text-amber-400">0</span>
                     </div>
                 </div>
-
                 <div id="tickets-queue-container" class="space-y-4">
-                    <!-- Dynamic Orders and Tickets Generated via JavaScript -->
+                    <!-- Cards parsed via script loops dynamically -->
                 </div>
             </div>
 
-            <!-- SUB TAB 2: INVENTORY STOCK ADJUSTER -->
+            <!-- SUB TAB 2: SPREADSHEET CATALOG EDITOR (STOCK ADJUSTMENTS) -->
             <div id="admin-subview-inventory" class="space-y-4 hidden">
                 <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 shadow-md space-y-4">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                         <div>
-                            <h3 class="font-bold text-lg text-slate-200">Hardware Room Catalog Editor</h3>
-                            <p class="text-xs text-slate-400">Update count variables, edit locations, or append fresh inventory nodes directly.</p>
+                            <h3 class="font-bold text-lg text-slate-200">Hardware Catalog Registry Editor</h3>
+                            <p class="text-xs text-slate-400">Perform direct matrix stock updates, append fresh layout definitions, or edit parts schemas.</p>
                         </div>
                         <button onclick="openNewItemModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs px-3 py-2 rounded-lg flex items-center gap-1 transition-all">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
-                            Add New Component Entry
+                            Register New Component Profile
                         </button>
                     </div>
 
-                    <!-- New Item Form Pop-out Drawer (Hidden by Default) -->
+                    <!-- New Item Registration Drawer Layout Pane -->
                     <div id="new-item-drawer" class="hidden bg-slate-900 border border-slate-700 p-4 rounded-lg space-y-3">
-                        <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider">New Hardware Registration Schema</h4>
+                        <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider">New Hardware Registration Schema Node</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
-                            <input type="text" id="add-item-name" placeholder="Item Name (e.g. U-Channel)" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-500">
-                            <input type="text" id="add-item-sku" placeholder="SKU / Part # (e.g. GB-1120)" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-500">
+                            <input type="text" id="add-item-name" placeholder="Component Name (e.g. Servo)" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-500">
+                            <input type="text" id="add-item-sku" placeholder="SKU Code (e.g. GB-4351)" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-500">
                             <select id="add-item-category" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-500">
                                 <option value="Motors & Control">Motors & Control</option>
                                 <option value="Structural Elements">Structural Elements</option>
@@ -282,30 +279,30 @@
                                 <option value="Fasteners & Spacers">Fasteners & Spacers</option>
                                 <option value="Tools & Workspace">Tools & Workspace</option>
                             </select>
-                            <input type="number" id="add-item-stock" min="0" placeholder="Initial Count" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-500">
-                            <input type="text" id="add-item-location" placeholder="Bin Location (e.g. Drawer B3)" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-500">
+                            <input type="number" id="add-item-stock" min="0" placeholder="Initial Count Units" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-500">
+                            <input type="text" id="add-item-location" placeholder="Bin Coordinate (e.g. Drawer C4)" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-500">
                             <div class="flex gap-2">
-                                <button onclick="saveNewItem()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-bold">Save</button>
+                                <button onclick="saveNewItem()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-bold">Save Node</button>
                                 <button onclick="closeNewItemModal()" class="bg-slate-700 hover:bg-slate-600 text-slate-200 px-3 rounded text-xs">Cancel</button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Spreadsheet Table Configurator -->
+                    <!-- Main Data Matrix Configuration Grid Spreadsheet Table -->
                     <div class="overflow-x-auto rounded-lg border border-slate-800">
                         <table class="w-full text-left border-collapse">
                             <thead>
                                 <tr class="bg-slate-900 border-b border-slate-800 text-xs font-bold text-slate-400 uppercase tracking-wider">
                                     <th class="p-3">Component Identifier</th>
-                                    <th class="p-3">SKU / Part #</th>
+                                    <th class="p-3">SKU / Vendor Code</th>
                                     <th class="p-3">Category Group</th>
-                                    <th class="p-3">Location Bin</th>
-                                    <th class="p-3 text-center">Available Stock</th>
-                                    <th class="p-3 text-right">Action Operations</th>
+                                    <th class="p-3">Storage Coordinates</th>
+                                    <th class="p-3 text-center">Available Stock Quantities</th>
+                                    <th class="p-3 text-right">Action Vectors</th>
                                 </tr>
                             </thead>
                             <tbody id="admin-inventory-table" class="divide-y divide-slate-800/40 text-sm">
-                                <!-- Dynamic Rows Generated via JavaScript -->
+                                <!-- Generated spreadsheet row blocks injected via JavaScript execution -->
                             </tbody>
                         </table>
                     </div>
@@ -314,21 +311,20 @@
         </section>
     </main>
 
-    <!-- App Footer -->
+    <!-- App Footer Context -->
     <footer class="bg-slate-950 text-center py-4 border-t border-slate-800 mt-12 text-xs text-slate-500">
         <p>Robo-Vault Terminal Core • Interactive Cloud Sync Workspace Layout</p>
     </footer>
 
     <!-- APP SCRIPT PROGRAM LOGIC -->
     <script>
-        // ==========================================
-        // GOOGLE APPS SCRIPT WEB APP API URL CONFIG
-        // ==========================================
-        // Paste your deployed Web App link inside the quotes below to sync instantly.
-        // Leave it completely blank to fall back seamlessly to local browser memory testing!
+        // =========================================================================
+        // GOOGLE APPS SCRIPT WEB APP API URL CONFIGURATION
+        // =========================================================================
+        // Paste your deployed deployment link inside the quotes below to enable synchronization.
         const GOOGLE_SCRIPT_URL = "https://script.google.com/a/macros/students.fairmontschools.com/s/AKfycbzi-eA-CeJrikQ3ocx36lFmc6NgnzVrbCRqN7__IkGzPPWo5DnBeNDxPzWNOW1eXpQm/exec"; 
 
-        // Baseline Mock Data (Fallback if cloud deployment link is empty or network drops)
+        // Core Default FTC Equipment Database Template Baseline
         const DEFAULT_INVENTORY = [
             { id: 1, name: "REV Robotics Control Hub", sku: "REV-31-1595", category: "Motors & Control", stock: 3, location: "Cabinet Alpha - Bin A1" },
             { id: 2, name: "REV Robotics Expansion Hub", sku: "REV-31-1153", category: "Motors & Control", stock: 4, location: "Cabinet Alpha - Bin A2" },
@@ -338,7 +334,6 @@
             { id: 6, name: "GoBilda 1120 Series U-Channel (368mm)", sku: "GB-1120-0368", category: "Structural Elements", stock: 16, location: "Rack 1 - Shelf Upper" },
             { id: 7, name: "GoBilda 1120 Series U-Channel (288mm)", sku: "GB-1120-0288", category: "Structural Elements", stock: 24, location: "Rack 1 - Shelf Upper" },
             { id: 8, name: "GoBilda 90-Degree Dual Block Mount", sku: "GB-1201-0002", category: "Structural Elements", stock: 45, location: "Blue Grid Case - Box 2" },
-            { id: 9, name: "TETRIX MAX 288mm Channel Pack", sku: "TX-39067", category: "Structural Elements", stock: 6, location: "Rack 2 - Floor Box" },
             { id: 10, name: "96mm GoBilda Rhino Track Wheels", sku: "GB-4004-0096", category: "Motion Components", stock: 8, location: "Rack 1 - Bin C1" },
             { id: 11, name: "96mm Mecanum Wheels (Set of 4)", sku: "GB-4204-0096", category: "Motion Components", stock: 3, location: "Cabinet Beta - Box Large" },
             { id: 12, name: "GoBilda Miter Gear (30-Tooth, Steel)", sku: "GB-2315-0030", category: "Motion Components", stock: 18, location: "Blue Grid Case - Box 5" },
@@ -348,20 +343,67 @@
             { id: 16, name: "GoBilda Zinc-Plated M3 Lock Nut", sku: "GB-2900-0003", category: "Fasteners & Spacers", stock: 400, location: "Fastener Wall - Bin F5" }
         ];
 
-        const SECURITY_ADMIN_PASSKEY = "19516"; 
+        const SECURITY_ADMIN_PASSKEY = "1111"; 
 
-        // Session States Variable Heap
+        // Global Variable State Heap Configuration
         let inventory = [];
         let cart = {}; 
         let requests = [];
         let currentFilterCategory = "All";
         let isAdminAuthenticated = false;
 
-        // Initialization Pipeline Routine
+        // =========================================================================
+        // GLOBAL SCOPE INLINE LISTENER HELPER CODES (Prevents ReferenceError Exceptions)
+        // =========================================================================
+        function adjustCardQuantityInput(itemId, delta, maxStock = 999) {
+            const input = document.getElementById(`input-qty-${itemId}`);
+            if (!input) return;
+            let currentVal = parseInt(input.value) || 1;
+            currentVal += delta;
+            if (currentVal < 1) currentVal = 1;
+            if (currentVal > parseInt(maxStock)) currentVal = parseInt(maxStock);
+            input.value = currentVal;
+        }
+
+        function addToCartTicket(itemId) {
+            const targetItem = inventory.find(i => Number(i.id) === Number(itemId));
+            if (!targetItem) return;
+
+            const qtyInput = document.getElementById(`input-qty-${itemId}`);
+            const requestQty = parseInt(qtyInput.value) || 1;
+
+            if (requestQty > parseInt(targetItem.stock)) {
+                createToast("Allocation Warning", "Requested quantity exceeds available database stock.", "warning");
+                return;
+            }
+
+            const currentInCart = cart[itemId] || 0;
+            if (currentInCart + requestQty > parseInt(targetItem.stock)) {
+                createToast("Allocation Threshold", "Total items in list would exceed physical stock limits.", "warning");
+                return;
+            }
+
+            cart[itemId] = currentInCart + requestQty;
+            createToast("Hardware Added", `Appended x${requestQty} components to your active ticket draft.`, "success");
+            
+            updateGlobalBadges();
+            renderPartsGrid();
+        }
+
+        // Initialization Pipeline Lifecycle Orchestrator
         window.onload = async function() {
+            // Restore structural routing layout definition metrics
+            const savedAuth = sessionStorage.getItem("robo_vault_auth");
+            if (savedAuth === "true") {
+                isAdminAuthenticated = true;
+            }
+
+            const savedView = sessionStorage.getItem("robo_vault_view") || "browse";
+            const savedSubTab = sessionStorage.getItem("robo_vault_subtab") || "tickets";
+
             if (GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL.trim() !== "") {
                 document.getElementById("sync-status-bar").classList.remove("hidden");
-                setCloudIndicatorState("syncing", "Downloading database rows...");
+                setCloudIndicatorState("syncing", "Downloading master database rows...");
                 await fetchCloudDatabaseRecords();
             } else {
                 loadLocalDatabaseFallback();
@@ -373,12 +415,17 @@
             renderAdminView();
             updateGlobalBadges();
 
+            switchViewDirect(savedView);
+            if (savedView === "admin") {
+                switchAdminSubTabDirect(savedSubTab);
+            }
+
             document.getElementById("admin-passkey-input").addEventListener("keyup", function(e) {
                 if (e.key === "Enter") verifyAdminPasskey();
             });
         };
 
-        // Network Data Acquisition Matrix Handler
+        // Asynchronous Cloud Database Reader
         async function fetchCloudDatabaseRecords() {
             if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.trim() === "") return;
             try {
@@ -393,7 +440,7 @@
                     
                     localStorage.setItem("ftc_vault_inventory", JSON.stringify(inventory));
                     localStorage.setItem("ftc_vault_requests", JSON.stringify(requests));
-                    setCloudIndicatorState("online", "Database sync synchronized.");
+                    setCloudIndicatorState("online", "Cloud sync synchronized successfully.");
                 } else if (jsonResult && jsonResult.status === "error") {
                     console.error("Sheet Configuration Error:", jsonResult.message);
                     createToast("Database Schema Error", jsonResult.message, "error");
@@ -404,26 +451,27 @@
                 }
             } catch (err) {
                 console.error("Cloud connectivity pipeline failed:", err);
-                createToast("Cloud Connection Blocked", "Check Web App deployment settings or console layout errors.", "warning");
                 loadLocalDatabaseFallback();
-                setCloudIndicatorState("offline", "Database network error. Local storage active.");
+                setCloudIndicatorState("offline", "Database connection offline. Local sandbox active.");
             }
         }
 
-        // Asynchronous Mutation Transmitter Pipeline
-        async function transmitCloudMutation(payloadAction, dataObj) {
+        // Asynchronous Background Mutation Transmitter Pipeline (No Page Reloads)
+        async function transmitCloudMutation(payloadAction, dataObj, successMessageTitle, successMessageBody) {
+            // Save state updates locally to cache cache boundaries instantly
+            localStorage.setItem("ftc_vault_inventory", JSON.stringify(inventory));
+            localStorage.setItem("ftc_vault_requests", JSON.stringify(requests));
+            
+            createToast(successMessageTitle, successMessageBody, "success");
+
             if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.trim() === "") {
-                localStorage.setItem("ftc_vault_inventory", JSON.stringify(inventory));
-                localStorage.setItem("ftc_vault_requests", JSON.stringify(requests));
                 return true;
             }
 
             try {
-                setCloudIndicatorState("syncing", "Uploading cloud mutation variables...");
+                setCloudIndicatorState("syncing", "Uploading cloud mutation logs...");
                 const bodyParams = { action: payloadAction, data: dataObj };
                 
-                // Using mode: 'no-cors' allows the browser to securely POST to Google Scripts without getting blocked by preflight CORS checks.
-                // Since 'no-cors' returns an opaque network token response, we bypass checking response.ok and wait for a safe database settle cycle.
                 await fetch(GOOGLE_SCRIPT_URL, {
                     method: "POST",
                     mode: "no-cors",
@@ -431,32 +479,25 @@
                     body: JSON.stringify(bodyParams)
                 });
                 
-                // Introduce an 800ms pipeline pause for the Google Apps Script container threads to fully commit cells before drawing a clean refresh query
-                await new Promise(resolve => setTimeout(resolve, 800));
-                await fetchCloudDatabaseRecords();
-                
-                renderPartsGrid();
-                renderCartList();
-                renderAdminView();
-                updateGlobalBadges();
-                
+                setCloudIndicatorState("online", "Cloud sync synchronized successfully.");
                 return true;
             } catch (error) {
-                console.error("Mutation drop transmission broke down:", error);
-                createToast("Sync Error", "Modification failed to stream to Google Sheets.", "error");
-                setCloudIndicatorState("offline", "Sync failed. Connection error.");
+                console.error("Mutation dropped connection:", error);
+                createToast("Sync Warning", "Modification saved locally but failed to write to Google Sheets cloud grid.", "warning");
+                setCloudIndicatorState("offline", "Sync lagging. Intercepted networking trace.");
                 return false;
             }
         }
 
         async function refreshDataFromCloud() {
-            setCloudIndicatorState("syncing", "Re-syncing cloud frames...");
+            setCloudIndicatorState("syncing", "Syncing active cloud frames...");
             await fetchCloudDatabaseRecords();
+            renderFilterTabs();
             renderPartsGrid();
             renderCartList();
             renderAdminView();
             updateGlobalBadges();
-            createToast("Data Refreshed", "Live Google Sheets dataset fetched successfully.", "success");
+            createToast("Data Synchronized", "Live Google Sheets dataset compiled cleanly.", "success");
         }
 
         function loadLocalDatabaseFallback() {
@@ -488,21 +529,30 @@
             }
         }
 
-        // Navigation Controller Router
+        // Layout Router Actions
         function switchView(target) {
             if (target === "admin" && !isAdminAuthenticated) {
                 openAdminAuthModal();
                 return;
             }
+            switchViewDirect(target);
+        }
 
+        function switchViewDirect(target) {
+            sessionStorage.setItem("robo_vault_view", target);
             const views = ["browse", "cart", "admin"];
             views.forEach(v => {
-                document.getElementById(`view-${v}`).classList.replace("block", "hidden");
-                document.getElementById(`nav-${v}`).className = "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 whitespace-nowrap text-slate-400 hover:text-slate-200 flex items-center gap-2";
+                const el = document.getElementById(`view-${v}`);
+                if (el) el.classList.replace("block", "hidden");
+                const navBtn = document.getElementById(`nav-${v}`);
+                if (navBtn) navBtn.className = "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 whitespace-nowrap text-slate-400 hover:text-slate-200 flex items-center gap-2";
             });
 
-            document.getElementById(`view-${target}`).classList.replace("hidden", "block");
-            document.getElementById(`nav-${target}`).className = "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 whitespace-nowrap bg-amber-500 text-slate-950 shadow-sm flex items-center gap-2";
+            const targetView = document.getElementById(`view-${target}`);
+            if (targetView) targetView.classList.replace("hidden", "block");
+            
+            const targetNav = document.getElementById(`nav-${target}`);
+            if (targetNav) targetNav.className = "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 whitespace-nowrap bg-amber-500 text-slate-950 shadow-sm flex items-center gap-2";
 
             if (target === "browse") renderPartsGrid();
             if (target === "cart") renderCartList();
@@ -526,9 +576,10 @@
 
             if (inputField.value === SECURITY_ADMIN_PASSKEY) {
                 isAdminAuthenticated = true;
+                sessionStorage.setItem("robo_vault_auth", "true");
                 errorLabel.classList.add("hidden");
                 closeAdminAuthModal();
-                createToast("Access Granted", "Admin console operations unlocked.", "success");
+                createToast("Authentication Confirmed", "Admin terminal dashboard unlocked.", "success");
                 switchView("admin");
             } else {
                 errorLabel.classList.remove("hidden");
@@ -539,15 +590,23 @@
 
         function lockAdminSession() {
             isAdminAuthenticated = false;
-            createToast("Console Secured", "Admin terminal logged out.", "warning");
+            sessionStorage.setItem("robo_vault_auth", "false");
+            createToast("Session Revoked", "Admin workspace closed securely.", "warning");
             switchView("browse");
         }
 
         function switchAdminSubTab(subtab) {
+            sessionStorage.setItem("robo_vault_subtab", subtab);
+            switchAdminSubTabDirect(subtab);
+        }
+
+        function switchAdminSubTabDirect(subtab) {
             const ticketsBtn = document.getElementById("admin-tab-tickets");
             const inventoryBtn = document.getElementById("admin-tab-inventory");
             const ticketsView = document.getElementById("admin-subview-tickets");
             const inventoryView = document.getElementById("admin-subview-inventory");
+
+            if (!ticketsBtn || !inventoryBtn || !ticketsView || !inventoryView) return;
 
             if (subtab === "tickets") {
                 ticketsBtn.className = "border-b-2 border-amber-500 pb-2 px-2 text-sm font-bold text-amber-400 transition-all";
@@ -649,41 +708,6 @@
             renderPartsGrid();
         }
 
-        function adjustCardQuantityInput(itemId, delta, maxStock = 999) {
-            const input = document.getElementById(`input-qty-${itemId}`);
-            if (!input) return;
-            let currentVal = parseInt(input.value) || 1;
-            currentVal += delta;
-            if (currentVal < 1) currentVal = 1;
-            if (currentVal > parseInt(maxStock)) currentVal = parseInt(maxStock);
-            input.value = currentVal;
-        }
-
-        function addToCartTicket(itemId) {
-            const targetItem = inventory.find(i => i.id === itemId);
-            if (!targetItem) return;
-
-            const qtyInput = document.getElementById(`input-qty-${itemId}`);
-            const requestQty = parseInt(qtyInput.value) || 1;
-
-            if (requestQty > parseInt(targetItem.stock)) {
-                createToast("Allocation Warning", "Requested quantity exceeds available database stock.", "warning");
-                return;
-            }
-
-            const currentInCart = cart[itemId] || 0;
-            if (currentInCart + requestQty > parseInt(targetItem.stock)) {
-                createToast("Allocation Threshold", "Total items in list would exceed physical stock limits.", "warning");
-                return;
-            }
-
-            cart[itemId] = currentInCart + requestQty;
-            createToast("Hardware Added", `Appended x${requestQty} components to your active ticket draft.`, "success");
-            
-            updateGlobalBadges();
-            renderPartsGrid();
-        }
-
         function updateGlobalBadges() {
             const uniqueCartCount = Object.keys(cart).length;
             const cartBadge = document.getElementById("cart-badge");
@@ -722,7 +746,7 @@
 
             cartKeys.forEach(key => {
                 const itemId = parseInt(key);
-                const item = inventory.find(i => i.id === itemId);
+                const item = inventory.find(i => Number(i.id) === Number(itemId));
                 if (!item) return;
 
                 const qty = cart[key];
@@ -735,7 +759,7 @@
                             <h4 class="font-semibold text-slate-200 text-sm truncate">${item.name}</h4>
                         </div>
                         <div class="flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-slate-400 mt-0.5">
-                            <span>Storage Room Line: <strong class="text-slate-300">${item.location}</strong></span>
+                            <span>Storage Area Bin: <strong class="text-slate-300">${item.location}</strong></span>
                             <span>Max Available: ${item.stock}</span>
                         </div>
                     </div>
@@ -756,7 +780,7 @@
         }
 
         function changeCartItemQty(itemId, delta) {
-            const item = inventory.find(i => i.id === itemId);
+            const item = inventory.find(i => Number(i.id) === Number(itemId));
             if (!item) return;
 
             let currentQty = cart[itemId] || 0;
@@ -777,7 +801,6 @@
             renderCartList();
         }
 
-        // Fulfill Transaction Workflow Matrix Reduction
         function removeCartItemNode(itemId) {
             delete cart[itemId];
             updateGlobalBadges();
@@ -791,62 +814,78 @@
             renderCartList();
         }
 
-        // Core Post Modification Stream Commands
+        // Core Post Modification Local-First Sync Triggers (No Flashing/Refreshing needed)
         async function submitRequestTicket() {
-            const nameInput = document.getElementById("req-name");
-            const subteamSelect = document.getElementById("req-subteam");
-            const notesInput = document.getElementById("req-notes");
+            try {
+                const nameInput = document.getElementById("req-name");
+                const subteamSelect = document.getElementById("req-subteam");
+                const notesInput = document.getElementById("req-notes");
 
-            const name = nameInput.value.trim();
-            if (!name) {
-                createToast("Verification Alert", "Please fill in a team builder name to route responsibility.", "warning");
-                nameInput.focus();
-                return;
-            }
+                if (!nameInput || !subteamSelect || !notesInput) return;
 
-            const cartKeys = Object.keys(cart);
-            if (cartKeys.length === 0) {
-                createToast("Action Error", "Cannot dispatch an empty parts payload list.", "warning");
-                return;
-            }
+                const name = nameInput.value.trim();
+                if (!name) {
+                    createToast("Verification Alert", "Please fill in a lead builder name signature to dispatch.", "warning");
+                    nameInput.focus();
+                    return;
+                }
 
-            const orderedItems = cartKeys.map(key => {
-                const id = parseInt(key);
-                const invItem = inventory.find(i => i.id === id);
-                return {
-                    itemId: id,
-                    name: invItem ? invItem.name : "Unknown Item",
-                    sku: invItem ? (invItem.sku || "N/A") : "N/A",
-                    qty: cart[key],
-                    location: invItem ? invItem.location : "N/A"
+                const cartKeys = Object.keys(cart);
+                if (cartKeys.length === 0) {
+                    createToast("Action Aborted", "Cannot append or process an empty parts list request.", "warning");
+                    return;
+                }
+
+                const orderedItems = cartKeys.map(key => {
+                    const id = parseInt(key);
+                    const invItem = inventory.find(i => Number(i.id) === Number(id));
+                    return {
+                        itemId: id,
+                        name: invItem ? invItem.name : "Unknown Component Node",
+                        sku: invItem ? (invItem.sku || "N/A") : "N/A",
+                        qty: cart[key],
+                        location: invItem ? invItem.location : "N/A"
+                    };
+                });
+
+                const newTicketPayload = {
+                    id: Date.now(),
+                    requester: name,
+                    subteam: subteamSelect.value,
+                    notes: notesInput.value.trim() || "No log notes appended.",
+                    items: orderedItems,
+                    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    status: "Pending"
                 };
-            });
 
-            const newTicketObj = {
-                id: Date.now(),
-                requester: name,
-                subteam: subteamSelect.value,
-                notes: notesInput.value.trim() || "No notes appended.",
-                items: orderedItems,
-                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                status: "Pending"
-            };
-
-            requests.unshift(newTicketObj);
-            const success = await transmitCloudMutation("submitTicket", newTicketObj);
-            
-            if (success) {
-                cart = {};
+                // Update Local UI instantly
+                requests.unshift(newTicketPayload);
+                cart = {}; // Completely wipe selection list parameters instantly
                 nameInput.value = "";
                 notesInput.value = "";
+
+                // Re-render interfaces right away
+                renderCartList();
+                renderAdminView();
                 updateGlobalBadges();
-                createToast("Ticket Saved", "Hardware request submitted successfully to Cloud Sheet logs.", "success");
-                switchView("browse");
+                switchViewDirect("browse");
+
+                // Transmit mutation in the background
+                await transmitCloudMutation(
+                    "submitTicket", 
+                    newTicketPayload, 
+                    "Ticket Dispatched", 
+                    `Successfully filed checkout ticket under identity signature: ${name}.`
+                );
+            } catch (error) {
+                console.error("Critical core submission exception captured:", error);
+                createToast("Submission Failure", `Diagnostic Error Trace: ${error.message}`, "error");
             }
         }
 
         function renderAdminView() {
-            document.getElementById("admin-total-orders").innerText = requests.length;
+            const ordersBadge = document.getElementById("admin-total-orders");
+            if (ordersBadge) ordersBadge.innerText = requests.length;
             renderTicketsQueue();
         }
 
@@ -856,7 +895,7 @@
             container.innerHTML = "";
 
             if (requests.length === 0) {
-                container.innerHTML = `<div class="text-center py-12 bg-slate-950 rounded-xl border border-slate-800 text-slate-500 text-sm">No active allocation records on file.</div>`;
+                container.innerHTML = `<div class="text-center py-12 bg-slate-950 rounded-xl border border-slate-800 text-slate-500 text-sm">No active allocation tickets found inside queue stacks.</div>`;
                 return;
             }
 
@@ -927,14 +966,14 @@
         }
 
         async function fulfillTicket(ticketId) {
-            const ticket = requests.find(r => r.id === ticketId);
+            const ticket = requests.find(r => Number(r.id) === Number(ticketId));
             if (!ticket) return;
 
             let validationPass = true;
             let offendingItem = "";
 
             ticket.items.forEach(itm => {
-                const invItem = inventory.find(i => i.id === itm.itemId);
+                const invItem = inventory.find(i => Number(i.id) === Number(itm.itemId));
                 if (!invItem || parseInt(invItem.stock) < parseInt(itm.qty)) {
                     validationPass = false;
                     offendingItem = itm.name;
@@ -942,33 +981,57 @@
             });
 
             if (!validationPass) {
-                createToast("Fulfillment Aborted", `Insufficient stock left for "${offendingItem}".`, "error");
+                createToast("Fulfillment Error", `Insufficient container stock left for "${offendingItem}".`, "error");
                 return;
             }
 
+            // Deduct stock values locally and update status right away
             ticket.items.forEach(itm => {
-                const invItem = inventory.find(i => i.id === itm.itemId);
+                const invItem = inventory.find(i => Number(i.id) === Number(itm.itemId));
                 if (invItem) invItem.stock = parseInt(invItem.stock) - parseInt(itm.qty);
             });
 
             ticket.status = "Fulfilled";
-            const res = await transmitCloudMutation("fulfillTicket", { ticketId: ticketId, updatedInventory: inventory });
-            if (res) createToast("Manifest Settled", "Stock decremented. Voucher status synchronized to Sheets.", "success");
+
+            // Re-render arrays instantly
+            renderAdminView();
+            updateGlobalBadges();
+
+            // Background transmission
+            await transmitCloudMutation(
+                "fulfillTicket", 
+                { ticketId: ticketId, updatedInventory: inventory },
+                "Voucher Processed",
+                `Released components to ${ticket.requester}. Cloud spreadsheet rows updated.`
+            );
         }
 
         async function rejectTicket(ticketId) {
-            const ticket = requests.find(r => r.id === ticketId);
+            const ticket = requests.find(r => Number(r.id) === Number(ticketId));
             if (!ticket) return;
 
             ticket.status = "Denied";
-            const res = await transmitCloudMutation("rejectTicket", { ticketId: ticketId });
-            if (res) createToast("Ticket Denied", "Request ticket status locked as Denied.", "warning");
+            renderAdminView();
+            updateGlobalBadges();
+
+            await transmitCloudMutation(
+                "rejectTicket", 
+                { ticketId: ticketId },
+                "Voucher Revoked",
+                `Marked request ticket submitted by ${ticket.requester} as denied.`
+            );
         }
 
         async function clearTicketLogEntry(ticketId) {
-            requests = requests.filter(r => r.id !== ticketId);
-            const res = await transmitCloudMutation("deleteTicketLog", { ticketId: ticketId });
-            if (res) createToast("Log Cleaned", "Archived row removed from interface array logs.", "success");
+            requests = requests.filter(r => Number(r.id) !== Number(ticketId));
+            renderAdminView();
+            
+            await transmitCloudMutation(
+                "deleteTicketLog", 
+                { ticketId: ticketId },
+                "Log Entry Scrubbed",
+                "Scrubbed archived historical deployment metadata record node."
+            );
         }
 
         function renderAdminInventoryTable() {
@@ -1004,14 +1067,20 @@
         }
 
         async function quickUpdateStock(itemId, delta) {
-            const item = inventory.find(i => i.id === itemId);
+            const item = inventory.find(i => Number(i.id) === Number(itemId));
             if (!item) return;
 
             item.stock = parseInt(item.stock) + delta;
             if (item.stock < 0) item.stock = 0;
 
             document.getElementById(`admin-stock-val-${itemId}`).innerText = item.stock;
-            await transmitCloudMutation("modifyStockCount", { itemId: itemId, newStock: item.stock });
+            
+            await transmitCloudMutation(
+                "modifyStockCount", 
+                { itemId: itemId, newStock: item.stock },
+                "Quantity Matrix Saved",
+                `Adjusted available capacity parameters for component footprint: ${item.name}.`
+            );
         }
 
         function openNewItemModal() {
@@ -1037,7 +1106,7 @@
             const sku = skuEl.value.trim().toUpperCase() || "N/A";
             const category = catEl.value;
             const stock = parseInt(stockEl.value) || 0;
-            const location = locEl.value.trim() || "Unassigned Shelf Bin";
+            const location = locEl.value.trim() || "Unassigned Storage Drawer";
 
             if (!name) {
                 createToast("Validation Error", "Item profiles require a valid alphanumeric name.", "warning");
@@ -1054,32 +1123,65 @@
             };
 
             inventory.push(newItemNode);
-            const res = await transmitCloudMutation("addNewItem", newItemNode);
-            
-            if (res) {
-                renderFilterTabs();
-                renderAdminInventoryTable();
-                closeNewItemModal();
-                updateGlobalBadges();
-                createToast("Item Saved", `Successfully appended profile metrics for ${name}.`, "success");
-            }
+            renderAdminInventoryTable();
+            closeNewItemModal();
+
+            await transmitCloudMutation(
+                "addNewItem", 
+                newItemNode,
+                "Catalog Expanded",
+                `Successfully loaded profile metrics registry parameters for ${name}.`
+            );
         }
 
         async function deleteInventoryItemSchema(itemId) {
-            const target = inventory.find(i => i.id === itemId);
+            const target = inventory.find(i => Number(i.id) === Number(itemId));
             if (!target) return;
             
             const targetName = target.name;
-            inventory = inventory.filter(i => i.id !== itemId);
+            inventory = inventory.filter(i => Number(i.id) !== Number(itemId));
             if (cart[itemId]) delete cart[itemId];
 
-            const res = await transmitCloudMutation("purgeItemSchema", { itemId: itemId });
-            if (res) {
-                renderFilterTabs();
-                renderAdminInventoryTable();
-                updateGlobalBadges();
-                createToast("Catalog Record Purged", `Cleared definition for ${targetName}.`, "warning");
-            }
+            renderAdminInventoryTable();
+
+            await transmitCloudMutation(
+                "purgeItemSchema", 
+                { itemId: itemId },
+                "Profile Purged",
+                `Scrubbed descriptive row metadata for ${targetName} out of storage databases.`
+            );
+        }
+
+        // Notification Custom Toast UI Engine Renderer
+        function createToast(title, message, type = "success") {
+            const container = document.getElementById("toast-container");
+            if (!container) return;
+            const toast = document.createElement("div");
+            
+            const colorClasses = type === "success" 
+                ? "bg-slate-900 border-emerald-500 text-emerald-400" 
+                : type === "warning" ? "bg-slate-900 border-amber-500 text-amber-400" : "bg-slate-900 border-rose-500 text-rose-400";
+
+            toast.className = `border-l-4 p-4 rounded-lg shadow-xl flex items-start gap-3 transition-all duration-300 transform translate-y-2 opacity-0 ${colorClasses}`;
+            
+            toast.innerHTML = `
+                <div class="flex-1">
+                    <h5 class="font-bold text-sm text-slate-100">${title}</h5>
+                    <p class="text-xs text-slate-400 mt-0.5">${message}</p>
+                </div>
+                <button class="text-slate-500 hover:text-slate-300 text-xs font-bold" onclick="this.parentElement.remove()">✕</button>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.remove("translate-y-2", "opacity-0");
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add("opacity-0", "translate-y-[-8px]");
+                setTimeout(() => toast.remove(), 300);
+            }, 4200);
         }
     </script>
 </body>
