@@ -769,7 +769,6 @@
             renderCartList();
         }
 
-        // DISPATCH LIFE CYCLE REDESIGN: Subtracts quantities local-first instantly upon submission
         async function submitRequestTicket() {
             try {
                 const nameInput = document.getElementById("req-name");
@@ -790,7 +789,6 @@
                     return;
                 }
 
-                // Deduct stock levels LOCALLY right now before transmitting
                 cartKeys.forEach(key => {
                     const id = parseInt(key);
                     const invItem = inventory.find(i => Number(i.id) === Number(id));
@@ -830,7 +828,6 @@
                 updateGlobalBadges();
                 switchViewDirect("browse");
 
-                // Transmit ticket schema and current overall corrected snapshot status down to spreadsheet rows
                 await transmitCloudMutation(
                     "submitTicket", 
                     { ticket: newTicketPayload, updatedInventory: inventory }, 
@@ -842,7 +839,6 @@
             }
         }
 
-        // PUBLIC HISTORY ARCHIVE VIEWER TAB ENGINE
         function renderPublicHistory() {
             const container = document.getElementById("public-history-container");
             if (!container) return;
@@ -957,12 +953,10 @@
             );
         }
 
-        // RESTORE LOGIC RECONCILIATION: Adds items back to local inventory if request is rejected/denied
         async function rejectTicket(ticketId) {
             const ticket = requests.find(r => Number(r.id) === Number(ticketId));
             if (!ticket) return;
 
-            // Restore stock counts locally because the items were denied allocation
             ticket.items.forEach(itm => {
                 const invItem = inventory.find(i => Number(i.id) === Number(itm.itemId));
                 if (invItem) {
@@ -1005,14 +999,19 @@
                         </div>
                     </td>
                     <td class="p-3 text-right">
-                        <button onclick="deleteInventoryItemSchema(${item.id})" class="text-rose-500 hover:text-rose-400 p-1">✕</button>
+                        <div class="flex justify-end items-center gap-3">
+                            <button id="save-stock-btn-${item.id}" onclick="commitStockChange(${item.id})" class="px-3 py-1 rounded bg-slate-800 text-slate-400 font-bold text-xs transition-all border border-slate-700/60" title="Save Stock Changes to Cloud">
+                                Save
+                            </button>
+                            <button onclick="deleteInventoryItemSchema(${item.id})" class="text-rose-500 hover:text-rose-400 p-1 text-sm font-bold" title="Delete Component">✕</button>
+                        </div>
                     </td>
                 `;
                 tbody.appendChild(row);
             });
         }
 
-        async function quickUpdateStock(itemId, delta) {
+        function quickUpdateStock(itemId, delta) {
             const item = inventory.find(i => Number(i.id) === Number(itemId));
             if (!item) return;
 
@@ -1021,11 +1020,26 @@
 
             document.getElementById(`admin-stock-val-${itemId}`).innerText = item.stock;
             
+            const saveBtn = document.getElementById(`save-stock-btn-${itemId}`);
+            if (saveBtn) {
+                saveBtn.className = "px-3 py-1 rounded bg-emerald-600 text-white font-bold text-xs transition-all border border-emerald-500 animate-pulse";
+            }
+        }
+
+        async function commitStockChange(itemId) {
+            const item = inventory.find(i => Number(i.id) === Number(itemId));
+            if (!item) return;
+
+            const saveBtn = document.getElementById(`save-stock-btn-${itemId}`);
+            if (saveBtn) {
+                saveBtn.className = "px-3 py-1 rounded bg-slate-800 text-slate-400 font-bold text-xs transition-all border border-slate-700/60 opacity-60";
+            }
+
             await transmitCloudMutation(
                 "modifyStockCount", 
                 { itemId: itemId, newStock: item.stock },
                 "Quantity Matrix Saved",
-                `Directly updated capacity metrics row for ${item.name}.`
+                `Directly committed corrected capacity logs to cloud rows for ${item.name}.`
             );
         }
 
