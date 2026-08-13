@@ -1011,20 +1011,18 @@
             });
         }
 
-        function quickUpdateStock(itemId, delta) {
-            const item = inventory.find(i => Number(i.id) === Number(itemId));
-            if (!item) return;
+        async function quickUpdateStock(itemId, delta) {
+    const item = inventory.find(i => i.id === itemId);
+    if (!item) return;
 
-            item.stock = parseInt(item.stock) + delta;
-            if (item.stock < 0) item.stock = 0;
+    item.stock = parseInt(item.stock) + delta;
+    if (item.stock < 0) item.stock = 0;
 
-            document.getElementById(`admin-stock-val-${itemId}`).innerText = item.stock;
-            
-            const saveBtn = document.getElementById(`save-stock-btn-${itemId}`);
-            if (saveBtn) {
-                saveBtn.className = "px-3 py-1 rounded bg-emerald-600 text-white font-bold text-xs transition-all border border-emerald-500 animate-pulse";
-            }
-        }
+    document.getElementById(`admin-stock-val-${itemId}`).innerText = item.stock;
+    
+    // Updated to use "bulkUpdateInventory" so the backend rewrites the sheet correctly
+    await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory });
+}
 
         async function commitStockChange(itemId) {
             const item = inventory.find(i => Number(i.id) === Number(itemId));
