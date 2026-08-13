@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FTC Hardware Room Vault</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Custom scrollbar styling for a streamlined technical aesthetic */
@@ -26,7 +25,6 @@
 </head>
 <body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col">
 
-    <!-- Top Navigation Bar Header Context -->
     <header class="bg-slate-950 border-b border-slate-800 sticky top-0 z-50 px-4 py-3 shadow-md">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
@@ -41,7 +39,6 @@
                 </div>
             </div>
 
-            <!-- Global View Router Navigation Toggles -->
             <nav class="flex items-center bg-slate-900 p-1 rounded-lg border border-slate-800 w-full sm:w-auto overflow-x-auto">
                 <button id="nav-browse" onclick="switchView('browse')" class="px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 whitespace-nowrap bg-amber-500 text-slate-950 shadow-sm">
                     Browse Parts
@@ -61,10 +58,8 @@
         </div>
     </header>
 
-    <!-- App Dynamic Notification Toast System Layout Container -->
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-md w-full px-4 sm:px-0"></div>
 
-    <!-- Cloud Sync Connection Status Indicator Panel -->
     <div id="sync-status-bar" class="bg-slate-950 text-[11px] px-4 py-1.5 border-b border-slate-800/60 hidden text-slate-400">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <span id="sync-status-text" class="flex items-center gap-1.5">
@@ -75,7 +70,6 @@
         </div>
     </div>
 
-    <!-- Admin Authorization Passcode Input Modal Overlay -->
     <div id="admin-auth-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 max-w-sm w-full shadow-2xl space-y-4 transform transition-all scale-95">
             <div class="flex items-center gap-3 text-amber-400">
@@ -103,12 +97,9 @@
         </div>
     </div>
 
-    <!-- Application View Scaffolding Container -->
     <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:py-6">
         
-        <!-- ================= BROWSE INVENTORY VIEW ================= -->
         <section id="view-browse" class="block space-y-6">
-            <!-- Search Control Inputs & Filters Block -->
             <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col md:flex-row gap-4 items-center justify-between shadow-lg">
                 <div class="relative w-full md:max-w-md">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
@@ -120,12 +111,10 @@
                 <div class="flex flex-wrap gap-2 w-full md:w-auto items-center">
                     <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider hidden sm:inline">Filter:</span>
                     <div id="category-filters" class="flex flex-wrap gap-2">
-                        <!-- Categories rendering pipeline hook -->
-                    </div>
+                        </div>
                 </div>
             </div>
 
-            <!-- FTC Workspace Compliance Notice Banner -->
             <div class="bg-slate-950 rounded-xl p-4 border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-3 shadow-sm">
                 <div class="flex items-center gap-3">
                     <div class="text-amber-500 flex-shrink-0">
@@ -140,10 +129,8 @@
                 </div>
             </div>
 
-            <!-- Dynamic Part Catalog Grid Matrix -->
             <div id="parts-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                <!-- Cards appended via Javascript template layout parsing loops -->
-            </div>
+                </div>
             
             <div id="empty-browse-state" class="hidden text-center py-12 bg-slate-950 rounded-xl border border-slate-800">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-slate-600 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -151,10 +138,8 @@
             </div>
         </section>
 
-        <!-- ================= CART / ACTIVE REQUEST LIST VIEW ================= -->
         <section id="view-cart" class="hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Selection Manifest Queue Block -->
                 <div class="lg:col-span-2 space-y-4">
                     <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 shadow-md">
                         <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-2">
@@ -169,12 +154,10 @@
                         </div>
 
                         <div id="cart-items-container" class="divide-y divide-slate-800/60 max-h-[60vh] overflow-y-auto pr-2">
-                            <!-- Items drawn dynamically -->
-                        </div>
+                            </div>
                     </div>
                 </div>
 
-                <!-- Sub-team Allocation Ticket Submission Block Form -->
                 <div class="space-y-4">
                     <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 shadow-md space-y-4">
                         <h3 class="font-bold text-lg text-slate-200">Submit Collection Voucher</h3>
@@ -216,7 +199,6 @@
             </div>
         </section>
 
-        <!-- ================= CONFIRMED REQUESTS HISTORY VIEW (PUBLIC) ================= -->
         <section id="view-history" class="hidden space-y-6">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
                 <div>
@@ -225,13 +207,10 @@
                 </div>
             </div>
             <div id="public-history-container" class="space-y-4">
-                <!-- Archive data rows injected dynamically here -->
-            </div>
+                </div>
         </section>
 
-        <!-- ================= HARDWARE DESK MANAGEMENT PANEL (ADMIN VIEW) ================= -->
         <section id="view-admin" class="hidden space-y-6">
-            <!-- Security Access Operational Metrics Header Panel -->
             <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 px-4 flex justify-between items-center shadow-inner">
                 <div class="flex items-center gap-2 text-xs">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -245,7 +224,6 @@
                 </button>
             </div>
 
-            <!-- Admin Sub-view Tab Routers -->
             <div class="border-b border-slate-800 flex gap-4">
                 <button id="admin-tab-tickets" onclick="switchAdminSubTab('tickets')" class="border-b-2 border-amber-500 pb-2 px-2 text-sm font-bold text-amber-400 transition-all">
                     Active Dispatch Tickets
@@ -255,7 +233,6 @@
                 </button>
             </div>
 
-            <!-- SUB TAB 1: TICKETS ALLOCATION DISPATCH QUEUE -->
             <div id="admin-subview-tickets" class="space-y-4 block">
                 <div class="flex justify-between items-center">
                     <h3 class="text-lg font-bold text-slate-200">Pending Vault Dispatch Heap</h3>
@@ -264,11 +241,9 @@
                     </div>
                 </div>
                 <div id="tickets-queue-container" class="space-y-4">
-                    <!-- Cards parsed via script loops dynamically -->
-                </div>
+                    </div>
             </div>
 
-            <!-- SUB TAB 2: SPREADSHEET CATALOG EDITOR (STOCK ADJUSTMENTS) -->
             <div id="admin-subview-inventory" class="space-y-4 hidden">
                 <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 shadow-md space-y-4">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
@@ -282,7 +257,6 @@
                         </button>
                     </div>
 
-                    <!-- New Item Registration Drawer Layout Pane -->
                     <div id="new-item-drawer" class="hidden bg-slate-900 border border-slate-700 p-4 rounded-lg space-y-3">
                         <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider">New Hardware Registration Schema Node</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
@@ -304,7 +278,6 @@
                         </div>
                     </div>
 
-                    <!-- Main Data Matrix Configuration Grid Spreadsheet Table -->
                     <div class="overflow-x-auto rounded-lg border border-slate-800">
                         <table class="w-full text-left border-collapse">
                             <thead>
@@ -318,8 +291,7 @@
                                 </tr>
                             </thead>
                             <tbody id="admin-inventory-table" class="divide-y divide-slate-800/40 text-sm">
-                                <!-- Generated spreadsheet row blocks injected via JavaScript execution -->
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
                 </div>
@@ -327,12 +299,10 @@
         </section>
     </main>
 
-    <!-- App Footer Context -->
     <footer class="bg-slate-950 text-center py-4 border-t border-slate-800 mt-12 text-xs text-slate-500">
         <p>Robo-Vault Terminal Core • Interactive Cloud Sync Workspace Layout</p>
     </footer>
 
-    <!-- APP SCRIPT PROGRAM LOGIC -->
     <script>
         // =========================================================================
         // GOOGLE APPS SCRIPT WEB APP API URL CONFIGURATION
@@ -453,7 +423,9 @@
             localStorage.setItem("ftc_vault_inventory", JSON.stringify(inventory));
             localStorage.setItem("ftc_vault_requests", JSON.stringify(requests));
             
-            createToast(successMessageTitle, successMessageBody, "success");
+            if (successMessageTitle) {
+                createToast(successMessageTitle, successMessageBody, "success");
+            }
 
             if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.trim() === "") return true;
 
@@ -770,80 +742,78 @@
         }
 
         async function submitRequestTicket() {
-    try {
-        const nameInput = document.getElementById("req-name");
-        const subteamSelect = document.getElementById("req-subteam");
-        const notesInput = document.getElementById("req-notes");
-        if (!nameInput || !subteamSelect || !notesInput) return;
+            try {
+                const nameInput = document.getElementById("req-name");
+                const subteamSelect = document.getElementById("req-subteam");
+                const notesInput = document.getElementById("req-notes");
+                if (!nameInput || !subteamSelect || !notesInput) return;
 
-        const name = nameInput.value.trim();
-        if (!name) {
-            createToast("Verification Alert", "Please fill in a lead builder name signature to dispatch.", "warning");
-            nameInput.focus();
-            return;
-        }
+                const name = nameInput.value.trim();
+                if (!name) {
+                    createToast("Verification Alert", "Please fill in a lead builder name signature to dispatch.", "warning");
+                    nameInput.focus();
+                    return;
+                }
 
-        const cartKeys = Object.keys(cart);
-        if (cartKeys.length === 0) {
-            createToast("Action Aborted", "Cannot process an empty request list.", "warning");
-            return;
-        }
+                const cartKeys = Object.keys(cart);
+                if (cartKeys.length === 0) {
+                    createToast("Action Aborted", "Cannot process an empty request list.", "warning");
+                    return;
+                }
 
-        // Subtract quantities from inventory locally
-        cartKeys.forEach(key => {
-            const id = parseInt(key);
-            const invItem = inventory.find(i => Number(i.id) === Number(id));
-            if (invItem) {
-                invItem.stock = parseInt(invItem.stock) - parseInt(cart[key]);
+                cartKeys.forEach(key => {
+                    const id = parseInt(key);
+                    const invItem = inventory.find(i => Number(i.id) === Number(id));
+                    if (invItem) {
+                        invItem.stock = parseInt(invItem.stock) - parseInt(cart[key]);
+                    }
+                });
+
+                const orderedItems = cartKeys.map(key => {
+                    const id = parseInt(key);
+                    const invItem = inventory.find(i => Number(i.id) === Number(id));
+                    return {
+                        itemId: id,
+                        name: invItem ? invItem.name : "Unknown Component",
+                        sku: invItem ? (invItem.sku || "N/A") : "N/A",
+                        qty: cart[key],
+                        location: invItem ? invItem.location : "N/A"
+                    };
+                });
+
+                const newTicketPayload = {
+                    id: Date.now(),
+                    requester: name,
+                    subteam: subteamSelect.value,
+                    notes: notesInput.value.trim() || "No notes appended.",
+                    items: orderedItems,
+                    timestamp: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    status: "Pending"
+                };
+
+                requests.unshift(newTicketPayload);
+                cart = {}; 
+                nameInput.value = "";
+                notesInput.value = "";
+
+                renderCartList();
+                updateGlobalBadges();
+                switchViewDirect("browse");
+
+                // AUTOMATED SUBMIT SYNC: Send ticket and bulk update stock immediately
+                await transmitCloudMutation(
+                    "submitTicket", 
+                    { ticket: newTicketPayload, updatedInventory: inventory }, 
+                    "Ticket Dispatched", 
+                    `Filed ticket under identity: ${name}. Stock levels updated automatically.`
+                );
+
+                await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory }, null, null);
+
+            } catch (error) {
+                console.error("Critical submission trace:", error);
             }
-        });
-
-        const orderedItems = cartKeys.map(key => {
-            const id = parseInt(key);
-            const invItem = inventory.find(i => Number(i.id) === Number(id));
-            return {
-                itemId: id,
-                name: invItem ? invItem.name : "Unknown Component",
-                sku: invItem ? (invItem.sku || "N/A") : "N/A",
-                qty: cart[key],
-                location: invItem ? invItem.location : "N/A"
-            };
-        });
-
-        const newTicketPayload = {
-            id: Date.now(),
-            requester: name,
-            subteam: subteamSelect.value,
-            notes: notesInput.value.trim() || "No notes appended.",
-            items: orderedItems,
-            timestamp: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            status: "Pending"
-        };
-
-        requests.unshift(newTicketPayload);
-        cart = {}; 
-        nameInput.value = "";
-        notesInput.value = "";
-
-        renderCartList();
-        updateGlobalBadges();
-        switchViewDirect("browse");
-
-        // TRANSMIT BOTH THE NEW TICKET AND THE FULL UPDATED INVENTORY TO CLOUD
-        await transmitCloudMutation(
-            "submitTicket", 
-            { ticket: newTicketPayload, updatedInventory: inventory }, 
-            "Ticket Dispatched", 
-            `Filed ticket under identity: ${name}. Stock levels updated automatically.`
-        );
-
-        // EXTRA SAFETY SYNC: Force bulk update on the backend inventory sheet
-        await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory }, "Stock Synced", "Inventory cloud database updated.");
-
-    } catch (error) {
-        console.error("Critical submission trace:", error);
-    }
-}
+        }
 
         function renderPublicHistory() {
             const container = document.getElementById("public-history-container");
@@ -974,12 +944,15 @@
             renderAdminView();
             updateGlobalBadges();
 
+            // AUTOMATED REJECTION SYNC: Send status update and bulk sync restored stock immediately
             await transmitCloudMutation(
                 "rejectTicket", 
                 { ticketId: ticketId, restoredInventory: inventory },
                 "Request Denied",
                 "Voucher marked as Denied. Component stock volumes safely restored."
             );
+
+            await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory }, null, null);
         }
 
         function renderAdminInventoryTable() {
@@ -1018,17 +991,16 @@
         }
 
         async function quickUpdateStock(itemId, delta) {
-    const item = inventory.find(i => i.id === itemId);
-    if (!item) return;
+            const item = inventory.find(i => i.id === itemId);
+            if (!item) return;
 
-    item.stock = parseInt(item.stock) + delta;
-    if (item.stock < 0) item.stock = 0;
+            item.stock = parseInt(item.stock) + delta;
+            if (item.stock < 0) item.stock = 0;
 
-    document.getElementById(`admin-stock-val-${itemId}`).innerText = item.stock;
-    
-    // Updated to use "bulkUpdateInventory" so the backend rewrites the sheet correctly
-    await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory });
-}
+            document.getElementById(`admin-stock-val-${itemId}`).innerText = item.stock;
+            
+            await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory }, null, null);
+        }
 
         async function commitStockChange(itemId) {
             const item = inventory.find(i => Number(i.id) === Number(itemId));
