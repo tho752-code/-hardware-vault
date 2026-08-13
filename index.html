@@ -422,15 +422,19 @@
                 setCloudIndicatorState("syncing", "Uploading cloud mutation variables...");
                 const bodyParams = { action: payloadAction, data: dataObj };
                 
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                // Using mode: 'no-cors' allows the browser to securely POST to Google Scripts without getting blocked by preflight CORS checks.
+                // Since 'no-cors' returns an opaque network token response, we bypass checking response.ok and wait for a safe database settle cycle.
+                await fetch(GOOGLE_SCRIPT_URL, {
                     method: "POST",
+                    mode: "no-cors",
                     headers: { "Content-Type": "text/plain" },
                     body: JSON.stringify(bodyParams)
                 });
                 
-                if (!response.ok) throw new Error("POST request network error");
-                
+                // Introduce an 800ms pipeline pause for the Google Apps Script container threads to fully commit cells before drawing a clean refresh query
+                await new Promise(resolve => setTimeout(resolve, 800));
                 await fetchCloudDatabaseRecords();
+                
                 renderPartsGrid();
                 renderCartList();
                 renderAdminView();
@@ -773,6 +777,7 @@
             renderCartList();
         }
 
+        // Fulfill Transaction Workflow Matrix Reduction
         function removeCartItemNode(itemId) {
             delete cart[itemId];
             updateGlobalBadges();
@@ -1005,7 +1010,6 @@
             item.stock = parseInt(item.stock) + delta;
             if (item.stock < 0) item.stock = 0;
 
-            // Instantly sync the visual label before waiting for the asynchronous cloud payload roundtrip
             document.getElementById(`admin-stock-val-${itemId}`).innerText = item.stock;
             await transmitCloudMutation("modifyStockCount", { itemId: itemId, newStock: item.stock });
         }
