@@ -410,11 +410,12 @@
         function startSmartAutoSync() {
             if (autoSyncInterval) clearInterval(autoSyncInterval);
 
-            // Runs every 45,000 ms (45 seconds)
+            // Set to 5 seconds (5000ms) for quick testing, change to 45000 later when finished
             autoSyncInterval = setInterval(async () => {
-                if (document.hidden || isUserIdle) {
-                    return; // Skip if tab is hidden or user walked away
+                if (document.hidden) {
+                    return; // Only stops if you minimize the tab
                 }
+                console.log("Auto-sync interval firing...");
                 await silentBackgroundSync();
             }, 5000);
         }
@@ -593,6 +594,10 @@
         function setCloudIndicatorState(state, traceMsg) {
             const statusBox = document.getElementById("sync-status-text");
             if (!statusBox) return;
+            
+            // Log to console so you can explicitly see when it triggers
+            console.log("Cloud Status Update:", traceMsg);
+
             if (state === "syncing") {
                 statusBox.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block animate-spin"></span><span class="text-amber-400 font-medium">${traceMsg}</span>`;
             } else if (state === "online") {
