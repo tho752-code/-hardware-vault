@@ -405,7 +405,7 @@
         let autoSyncInterval = null;
         let userActivityTimer = null;
         let isUserIdle = false;
-        const AUTO_SYNC_DELAY_MS = 45000; // 45 seconds
+        const AUTO_SYNC_DELAY_MS = 15000; // 15 seconds
         const IDLE_TIMEOUT_MS = 60000;    // 60 seconds of no interaction = considered idle
         
         let secondsRemaining = AUTO_SYNC_DELAY_MS / 1000;
@@ -610,14 +610,19 @@
         function setCloudIndicatorState(state, traceMsg) {
             const statusBox = document.getElementById("sync-status-text");
             if (!statusBox) return;
-            
-            // Log to console so you can explicitly see when it triggers
-            console.log("Cloud Status Update:", traceMsg);
 
+            // Updated function to include idle graphic
             if (state === "syncing") {
                 statusBox.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block animate-spin"></span><span class="text-amber-400 font-medium">${traceMsg}</span>`;
             } else if (state === "online") {
-                statusBox.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span><span class="text-slate-400">${traceMsg}</span>`;
+                // Determine if we should show the 'active' green dot or the 'idle' pulsing grey graphic
+                const statusDot = isUserIdle
+                    ? `<span class="flex items-center gap-1.5 text-slate-500"><span class="w-2 h-2 rounded-full bg-slate-600 inline-block animate-pulse"></span> <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span>`
+                    : `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>`;
+
+                const textClass = isUserIdle ? "text-slate-500" : "text-slate-400";
+                
+                statusBox.innerHTML = `${statusDot}<span class="${textClass}">${traceMsg}</span>`;
             } else if (state === "offline") {
                 statusBox.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-rose-500 inline-block"></span><span class="text-rose-400 font-semibold">${traceMsg}</span>`;
             }
