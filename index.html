@@ -6,21 +6,10 @@
     <title>FTC Hardware Room Vault</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom scrollbar styling for a streamlined technical aesthetic */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1e293b;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #475569;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #64748b;
-        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col">
@@ -71,7 +60,7 @@
     </div>
 
     <div id="admin-auth-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 max-w-sm w-full shadow-2xl space-y-4 transform transition-all scale-95">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 max-w-sm w-full shadow-2xl space-y-4">
             <div class="flex items-center gap-3 text-amber-400">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -87,18 +76,13 @@
             </div>
 
             <div class="flex gap-2 pt-2">
-                <button onclick="closeAdminAuthModal()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold py-2 transition-all">
-                    Cancel
-                </button>
-                <button onclick="verifyAdminPasskey()" class="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-lg text-xs font-bold py-2 transition-all shadow-sm">
-                    Authenticate
-                </button>
+                <button onclick="closeAdminAuthModal()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold py-2 transition-all">Cancel</button>
+                <button onclick="verifyAdminPasskey()" class="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-lg text-xs font-bold py-2 transition-all shadow-sm">Authenticate</button>
             </div>
         </div>
     </div>
 
     <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:py-6">
-        
         <section id="view-browse" class="block space-y-6">
             <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col md:flex-row gap-4 items-center justify-between shadow-lg">
                 <div class="relative w-full md:max-w-md">
@@ -107,31 +91,15 @@
                     </span>
                     <input type="text" id="search-input" oninput="filterInventory()" placeholder="Search hardware by name, SKU part number, or drawer..." class="w-full bg-slate-900 border border-slate-700 rounded-lg pl-10 pr-4 py-2.5 text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-slate-500">
                 </div>
-                
                 <div class="flex flex-wrap gap-2 w-full md:w-auto items-center">
                     <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider hidden sm:inline">Filter:</span>
                     <div id="category-filters" class="flex flex-wrap gap-2"></div>
                 </div>
             </div>
 
-            <div class="bg-slate-950 rounded-xl p-4 border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-3 shadow-sm">
-                <div class="flex items-center gap-3">
-                    <div class="text-amber-500 flex-shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h4 class="text-sm font-semibold text-slate-200">FTC Shop Storage Rule</h4>
-                        <p class="text-xs text-slate-400">Queue requested items onto your sub-team manifest ticket and click submit. Quantities update instantly in the cloud upon dispatch submission.</p>
-                    </div>
-                </div>
-            </div>
-
             <div id="parts-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
             
             <div id="empty-browse-state" class="hidden text-center py-12 bg-slate-950 rounded-xl border border-slate-800">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-slate-600 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                 <p class="text-slate-400 font-medium">No hardware room matching catalog definitions found for that parameter search query.</p>
             </div>
         </section>
@@ -141,14 +109,8 @@
                 <div class="lg:col-span-2 space-y-4">
                     <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 shadow-md">
                         <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-2">
-                            <h3 class="font-bold text-lg text-slate-200 flex items-center gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
-                                Checked Hardware Rows Manifest
-                            </h3>
-                            <button onclick="clearCart()" class="text-xs text-rose-400 hover:text-rose-300 font-medium flex items-center gap-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                                Empty Draft
-                            </button>
+                            <h3 class="font-bold text-lg text-slate-200">Checked Hardware Rows Manifest</h3>
+                            <button onclick="clearCart()" class="text-xs text-rose-400 hover:text-rose-300 font-medium">Empty Draft</button>
                         </div>
                         <div id="cart-items-container" class="divide-y divide-slate-800/60 max-h-[60vh] overflow-y-auto pr-2"></div>
                     </div>
@@ -157,16 +119,14 @@
                 <div class="space-y-4">
                     <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 shadow-md space-y-4">
                         <h3 class="font-bold text-lg text-slate-200">Submit Collection Voucher</h3>
-                        <p class="text-xs text-slate-400">Assign an identification name and sub-division group to register your parts request checkout signature.</p>
-                        
                         <div class="space-y-3">
                             <div>
                                 <label for="req-name" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Lead Requester Name</label>
-                                <input type="text" id="req-name" placeholder="e.g., Alex Johnson" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
+                                <input type="text" id="req-name" placeholder="e.g., Alex Johnson" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 text-sm">
                             </div>
                             <div>
                                 <label for="req-subteam" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Robot Sub-System Division</label>
-                                <select id="req-subteam" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
+                                <select id="req-subteam" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 text-sm">
                                     <option value="Chassis / Drivetrain">Chassis / Drivetrain</option>
                                     <option value="Intake Mechanism">Intake Mechanism</option>
                                     <option value="Outtake & Lift System">Outtake & Lift System</option>
@@ -177,17 +137,10 @@
                             </div>
                             <div>
                                 <label for="req-notes" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Purpose / Engineering Log Notes</label>
-                                <textarea id="req-notes" rows="3" placeholder="e.g., Mounting secondary linear slide anchors..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm resize-none"></textarea>
+                                <textarea id="req-notes" rows="3" placeholder="Notes..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 text-sm resize-none"></textarea>
                             </div>
                         </div>
-
-                        <div class="border-t border-slate-800 pt-3 flex justify-between items-center text-sm">
-                            <span class="text-slate-400">Unique Components:</span>
-                            <span id="cart-total-types" class="font-bold text-amber-400">0</span>
-                        </div>
-
-                        <button onclick="submitRequestTicket()" class="w-full bg-amber-500 text-slate-950 font-bold py-2.5 px-4 rounded-lg hover:bg-amber-400 transition-all duration-200 shadow flex items-center justify-center gap-2 mt-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 00-2-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-5 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+                        <button onclick="submitRequestTicket()" class="w-full bg-amber-500 text-slate-950 font-bold py-2.5 px-4 rounded-lg hover:bg-amber-400 transition-all shadow mt-2">
                             Dispatch Vault Ticket
                         </button>
                     </div>
@@ -196,78 +149,48 @@
         </section>
 
         <section id="view-history" class="hidden space-y-6">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <div>
-                    <h3 class="text-xl font-bold text-slate-100">Confirmed Request Archive Log</h3>
-                    <p class="text-xs text-slate-400">Public ledger tracking all completed, fulfilled, or denied tool allocation vouchers from your Google Sheet.</p>
-                </div>
-            </div>
+            <h3 class="text-xl font-bold text-slate-100 border-b border-slate-800 pb-3">Confirmed Request Archive Log</h3>
             <div id="public-history-container" class="space-y-4"></div>
         </section>
 
         <section id="view-admin" class="hidden space-y-6">
-            <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 px-4 flex justify-between items-center shadow-inner">
-                <div class="flex items-center gap-2 text-xs">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span class="text-slate-400">System Terminal Access Level: <strong class="text-emerald-400">Authorized Desk Mode</strong></span>
-                </div>
-                <button onclick="lockAdminSession()" class="text-[11px] font-bold text-rose-400 bg-slate-900 border border-slate-800 hover:bg-rose-950/20 px-2.5 py-1 rounded transition-colors flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                    Lock Session
-                </button>
+            <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 px-4 flex justify-between items-center">
+                <span class="text-xs text-slate-400">System Terminal: <strong class="text-emerald-400">Authorized Desk Mode</strong></span>
+                <button onclick="lockAdminSession()" class="text-[11px] font-bold text-rose-400 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded">Lock Session</button>
             </div>
 
             <div class="border-b border-slate-800 flex gap-4">
-                <button id="admin-tab-tickets" onclick="switchAdminSubTab('tickets')" class="border-b-2 border-amber-500 pb-2 px-2 text-sm font-bold text-amber-400 transition-all">
-                    Active Dispatch Tickets
-                </button>
-                <button id="admin-tab-inventory" onclick="switchAdminSubTab('inventory')" class="border-b-2 border-transparent pb-2 px-2 text-sm font-semibold text-slate-400 hover:text-slate-200 transition-all">
-                    Stock Control Manager
-                </button>
+                <button id="admin-tab-tickets" onclick="switchAdminSubTab('tickets')" class="border-b-2 border-amber-500 pb-2 px-2 text-sm font-bold text-amber-400">Active Dispatch Tickets</button>
+                <button id="admin-tab-inventory" onclick="switchAdminSubTab('inventory')" class="border-b-2 border-transparent pb-2 px-2 text-sm font-semibold text-slate-400">Stock Control Manager</button>
             </div>
 
             <div id="admin-subview-tickets" class="space-y-4 block">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-lg font-bold text-slate-200">Pending Vault Dispatch Heap</h3>
-                    <div class="text-xs text-slate-400 bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-lg">
-                        Total System Requests Cached: <span id="admin-total-orders" class="font-bold text-amber-400">0</span>
-                    </div>
-                </div>
+                <h3 class="text-lg font-bold text-slate-200">Pending Vault Dispatch Heap</h3>
                 <div id="tickets-queue-container" class="space-y-4"></div>
             </div>
 
             <div id="admin-subview-inventory" class="space-y-4 hidden">
                 <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 shadow-md space-y-4">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                        <div>
-                            <h3 class="font-bold text-lg text-slate-200">Hardware Catalog Registry Editor</h3>
-                            <p class="text-xs text-slate-400">Perform direct matrix stock updates, append fresh layout definitions, or edit parts schemas.</p>
-                        </div>
-                        <button onclick="openNewItemModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs px-3 py-2 rounded-lg flex items-center gap-1 transition-all">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
-                            Register New Component Profile
-                        </button>
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-lg text-slate-200">Hardware Catalog Registry Editor</h3>
+                        <button onclick="openNewItemModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-2 rounded-lg">Register New Component</button>
                     </div>
 
                     <div id="new-item-drawer" class="hidden bg-slate-900 border border-slate-700 p-4 rounded-lg space-y-3">
-                        <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider">New Hardware Registration Schema Node</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
-                            <input type="text" id="add-item-name" placeholder="Component Name (e.g. Servo)" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-500">
-                            <input type="text" id="add-item-sku" placeholder="SKU Code (e.g. GB-4351)" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-500">
-                            <select id="add-item-category" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-500">
+                            <input type="text" id="add-item-name" placeholder="Name" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-100">
+                            <input type="text" id="add-item-sku" placeholder="SKU" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-100">
+                            <select id="add-item-category" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-100">
                                 <option value="Motors & Control">Motors & Control</option>
                                 <option value="Structural Elements">Structural Elements</option>
                                 <option value="Motion Components">Motion Components</option>
                                 <option value="Fasteners & Spacers">Fasteners & Spacers</option>
-                                <option value="Tools & Workspace">Tools & Workspace</option>
                             </select>
-                            <input type="number" id="add-item-stock" min="0" placeholder="Initial Count Units" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-500">
-                            <input type="text" id="add-item-location" placeholder="Bin Coordinate (e.g. Drawer C4)" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-500">
+                            <input type="number" id="add-item-stock" placeholder="Stock" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-100">
+                            <input type="text" id="add-item-location" placeholder="Bin Location" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-100">
                             <div class="flex gap-2">
-                                <button onclick="saveNewItem()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-bold">Save Node</button>
-                                <button onclick="closeNewItemModal()" class="bg-slate-700 hover:bg-slate-600 text-slate-200 px-3 rounded text-xs">Cancel</button>
+                                <button onclick="saveNewItem()" class="flex-1 bg-emerald-600 text-white rounded text-xs font-bold">Save</button>
+                                <button onclick="closeNewItemModal()" class="bg-slate-700 text-slate-200 px-3 rounded text-xs">Cancel</button>
                             </div>
                         </div>
                     </div>
@@ -275,13 +198,13 @@
                     <div class="overflow-x-auto rounded-lg border border-slate-800">
                         <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="bg-slate-900 border-b border-slate-800 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                <tr class="bg-slate-900 border-b border-slate-800 text-xs font-bold text-slate-400 uppercase">
                                     <th class="p-3">Component Identifier</th>
-                                    <th class="p-3">SKU / Vendor Code</th>
-                                    <th class="p-3">Category Group</th>
-                                    <th class="p-3">Storage Coordinates</th>
-                                    <th class="p-3 text-center">Available Stock Quantities</th>
-                                    <th class="p-3 text-right">Action Vectors</th>
+                                    <th class="p-3">SKU / Code</th>
+                                    <th class="p-3">Category</th>
+                                    <th class="p-3">Location</th>
+                                    <th class="p-3 text-center">Stock</th>
+                                    <th class="p-3 text-right">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="admin-inventory-table" class="divide-y divide-slate-800/40 text-sm"></tbody>
@@ -292,18 +215,12 @@
         </section>
     </main>
 
-    <footer class="bg-slate-950 text-center py-4 border-t border-slate-800 mt-12 text-xs text-slate-500">
-        <p>Robo-Vault Terminal Core • Interactive Cloud Sync Workspace Layout</p>
-    </footer>
-
     <script>
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz-ruOm7yIEdOAOisw29vmFbIGoBReUTx-glTEhrgbuexMhC-KEiCxnz01MGFeRsz9Q/exec"; 
+        const GOOGLE_SCRIPT_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE"; 
 
         const DEFAULT_INVENTORY = [
             { id: 1, name: "REV Robotics Control Hub", sku: "REV-31-1595", category: "Motors & Control", stock: 3, location: "Cabinet Alpha - Bin A1" },
-            { id: 2, name: "REV Robotics Expansion Hub", sku: "REV-31-1153", category: "Motors & Control", stock: 4, location: "Cabinet Alpha - Bin A2" },
-            { id: 3, name: "GoBilda Yellow Jacket Motor (312 RPM)", sku: "GB-5202-0312", category: "Motors & Control", stock: 12, location: "Cabinet Alpha - Drawer B1" },
-            { id: 4, name: "GoBilda Yellow Jacket Motor (435 RPM)", sku: "GB-5202-0435", category: "Motors & Control", stock: 8, location: "Cabinet Alpha - Drawer B2" }
+            { id: 2, name: "REV Robotics Expansion Hub", sku: "REV-31-1153", category: "Motors & Control", stock: 4, location: "Cabinet Alpha - Bin A2" }
         ];
 
         const SECURITY_ADMIN_PASSKEY = "1111"; 
@@ -314,128 +231,52 @@
         let currentFilterCategory = "All";
         let isAdminAuthenticated = false;
 
-        function adjustCardQuantityInput(itemId, delta, maxStock = 999) {
-            const input = document.getElementById(`input-qty-${itemId}`);
-            if (!input) return;
-            let currentVal = parseInt(input.value) || 1;
-            currentVal += delta;
-            if (currentVal < 1) currentVal = 1;
-            if (currentVal > parseInt(maxStock)) currentVal = parseInt(maxStock);
-            input.value = currentVal;
-        }
-
-        function addToCartTicket(itemId) {
-            const targetItem = inventory.find(i => Number(i.id) === Number(itemId));
-            if (!targetItem) return;
-
-            const qtyInput = document.getElementById(`input-qty-${itemId}`);
-            const requestQty = parseInt(qtyInput.value) || 1;
-
-            if (requestQty > parseInt(targetItem.stock)) {
-                createToast("Allocation Warning", "Requested quantity exceeds available database stock.", "warning");
-                return;
-            }
-
-            const currentInCart = cart[itemId] || 0;
-            if (currentInCart + requestQty > parseInt(targetItem.stock)) {
-                createToast("Allocation Threshold", "Total items in list would exceed physical stock limits.", "warning");
-                return;
-            }
-
-            cart[itemId] = currentInCart + requestQty;
-            createToast("Hardware Added", `Appended x${requestQty} components to your active ticket draft.`, "success");
-            
-            updateGlobalBadges();
-            renderPartsGrid();
-        }
-
         window.onload = async function() {
-            const savedAuth = sessionStorage.getItem("robo_vault_auth");
-            if (savedAuth === "true") {
-                isAdminAuthenticated = true;
-            }
-
-            const savedView = sessionStorage.getItem("robo_vault_view") || "browse";
-            const savedSubTab = sessionStorage.getItem("robo_vault_subtab") || "tickets";
-
+            if (sessionStorage.getItem("robo_vault_auth") === "true") isAdminAuthenticated = true;
             if (GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL.trim() !== "") {
                 document.getElementById("sync-status-bar").classList.remove("hidden");
-                setCloudIndicatorState("syncing", "Downloading master database rows...");
                 await fetchCloudDatabaseRecords();
             } else {
                 loadLocalDatabaseFallback();
             }
-
             renderFilterTabs();
             renderPartsGrid();
             renderCartList();
             renderPublicHistory();
             renderAdminView();
             updateGlobalBadges();
-
-            switchViewDirect(savedView);
-            if (savedView === "admin") {
-                switchAdminSubTabDirect(savedSubTab);
-            }
-
-            document.getElementById("admin-passkey-input").addEventListener("keyup", function(e) {
-                if (e.key === "Enter") verifyAdminPasskey();
-            });
+            switchViewDirect(sessionStorage.getItem("robo_vault_view") || "browse");
         };
 
         async function fetchCloudDatabaseRecords() {
-            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.trim() === "") return;
+            if (!GOOGLE_SCRIPT_URL) return;
             try {
                 const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getData`, { method: "GET" });
-                if (!response.ok) throw new Error("Failed to reach Apps Script endpoint");
-                
                 const jsonResult = await response.json();
                 if (jsonResult && jsonResult.status === "success") {
                     inventory = jsonResult.inventory || [];
                     requests = jsonResult.requests || [];
-                    
-                    localStorage.setItem("ftc_vault_inventory", JSON.stringify(inventory));
-                    localStorage.setItem("ftc_vault_requests", JSON.stringify(requests));
-                    setCloudIndicatorState("online", "Cloud database status: Sync fully active.");
-                } else {
-                    throw new Error(jsonResult.message || "Invalid schema layout.");
                 }
             } catch (err) {
-                console.error("Cloud connection dropped:", err);
                 loadLocalDatabaseFallback();
-                setCloudIndicatorState("offline", "Database network error. Local sandbox active.");
             }
         }
 
-        async function transmitCloudMutation(payloadAction, dataObj, successMessageTitle, successMessageBody) {
-            localStorage.setItem("ftc_vault_inventory", JSON.stringify(inventory));
-            localStorage.setItem("ftc_vault_requests", JSON.stringify(requests));
-            
-            if (successMessageTitle) {
-                createToast(successMessageTitle, successMessageBody, "success");
-            }
-
-            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.trim() === "") return true;
-
+        async function transmitCloudMutation(payloadAction, dataObj) {
+            if (!GOOGLE_SCRIPT_URL) return;
             try {
-                setCloudIndicatorState("syncing", "Uploading cloud mutation logs...");
                 await fetch(GOOGLE_SCRIPT_URL, {
                     method: "POST",
                     mode: "no-cors",
                     headers: { "Content-Type": "text/plain" },
                     body: JSON.stringify({ action: payloadAction, data: dataObj })
                 });
-                setCloudIndicatorState("online", "Cloud database status: Sync fully active.");
-                return true;
             } catch (error) {
-                console.error("Cloud mutation dropped sync:", error);
-                setCloudIndicatorState("offline", "Database network lag encountered.");
-                return false;
+                console.error("Cloud mutation error:", error);
             }
         }
 
         async function refreshDataFromCloud() {
-            setCloudIndicatorState("syncing", "Syncing active cloud frames...");
             await fetchCloudDatabaseRecords();
             renderFilterTabs();
             renderPartsGrid();
@@ -443,7 +284,7 @@
             renderPublicHistory();
             renderAdminView();
             updateGlobalBadges();
-            createToast("Data Synchronized", "Live Google Sheets dataset compiled cleanly.", "success");
+            createToast("Synchronized", "Data updated from Google Sheets.", "success");
         }
 
         function loadLocalDatabaseFallback() {
@@ -451,614 +292,238 @@
             requests = localStorage.getItem("ftc_vault_requests") ? JSON.parse(localStorage.getItem("ftc_vault_requests")) : [];
         }
 
-        function setCloudIndicatorState(state, traceMsg) {
-            const statusBox = document.getElementById("sync-status-text");
-            if (!statusBox) return;
-            if (state === "syncing") {
-                statusBox.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block animate-spin"></span><span class="text-amber-400 font-medium">${traceMsg}</span>`;
-            } else if (state === "online") {
-                statusBox.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span><span class="text-slate-400">${traceMsg}</span>`;
-            } else if (state === "offline") {
-                statusBox.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-rose-500 inline-block"></span><span class="text-rose-400 font-semibold">${traceMsg}</span>`;
-            }
-        }
-
         function switchView(target) {
-            if (target === "admin" && !isAdminAuthenticated) {
-                openAdminAuthModal();
-                return;
-            }
+            if (target === "admin" && !isAdminAuthenticated) { openAdminAuthModal(); return; }
             switchViewDirect(target);
         }
 
         function switchViewDirect(target) {
             sessionStorage.setItem("robo_vault_view", target);
-            const views = ["browse", "cart", "history", "admin"];
-            views.forEach(v => {
-                const el = document.getElementById(`view-${v}`);
-                if (el) el.classList.replace("block", "hidden");
-                const navBtn = document.getElementById(`nav-${v}`);
-                if (navBtn) navBtn.className = "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 whitespace-nowrap text-slate-400 hover:text-slate-200 flex items-center gap-2";
+            ["browse", "cart", "history", "admin"].forEach(v => {
+                document.getElementById(`view-${v}`).className = v === target ? "block space-y-6" : "hidden space-y-6";
             });
-
-            const targetView = document.getElementById(`view-${target}`);
-            if (targetView) targetView.classList.replace("hidden", "block");
-            
-            const targetNav = document.getElementById(`nav-${target}`);
-            if (targetNav) targetNav.className = "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 whitespace-nowrap bg-amber-500 text-slate-950 shadow-sm flex items-center gap-2";
-
-            if (target === "browse") renderPartsGrid();
-            if (target === "cart") renderCartList();
-            if (target === "history") renderPublicHistory();
-            if (target === "admin") renderAdminView();
         }
 
-        function openAdminAuthModal() {
-            document.getElementById("auth-error-msg").classList.add("hidden");
-            document.getElementById("admin-passkey-input").value = "";
-            document.getElementById("admin-auth-modal").classList.replace("hidden", "flex");
-            document.getElementById("admin-passkey-input").focus();
-        }
-
-        function closeAdminAuthModal() {
-            document.getElementById("admin-auth-modal").classList.replace("flex", "hidden");
-        }
+        function openAdminAuthModal() { document.getElementById("admin-auth-modal").classList.replace("hidden", "flex"); }
+        function closeAdminAuthModal() { document.getElementById("admin-auth-modal").classList.replace("flex", "hidden"); }
 
         function verifyAdminPasskey() {
-            const inputField = document.getElementById("admin-passkey-input");
-            if (inputField.value === SECURITY_ADMIN_PASSKEY) {
+            if (document.getElementById("admin-passkey-input").value === SECURITY_ADMIN_PASSKEY) {
                 isAdminAuthenticated = true;
                 sessionStorage.setItem("robo_vault_auth", "true");
                 closeAdminAuthModal();
-                createToast("Authentication Confirmed", "Admin terminal dashboard unlocked.", "success");
                 switchView("admin");
             } else {
                 document.getElementById("auth-error-msg").classList.remove("hidden");
-                inputField.select();
             }
         }
 
         function lockAdminSession() {
             isAdminAuthenticated = false;
             sessionStorage.setItem("robo_vault_auth", "false");
-            createToast("Session Revoked", "Admin workspace closed securely.", "warning");
             switchView("browse");
         }
 
         function switchAdminSubTab(subtab) {
-            sessionStorage.setItem("robo_vault_subtab", subtab);
-            switchAdminSubTabDirect(subtab);
+            document.getElementById("admin-subview-tickets").className = subtab === "tickets" ? "space-y-4 block" : "space-y-4 hidden";
+            document.getElementById("admin-subview-inventory").className = subtab === "inventory" ? "space-y-4 block" : "space-y-4 hidden";
+            if (subtab === "inventory") renderAdminInventoryTable();
         }
 
-        function switchAdminSubTabDirect(subtab) {
-            const ticketsBtn = document.getElementById("admin-tab-tickets");
-            const inventoryBtn = document.getElementById("admin-tab-inventory");
-            const ticketsView = document.getElementById("admin-subview-tickets");
-            const inventoryView = document.getElementById("admin-subview-inventory");
+        function adjustCardQuantityInput(itemId, delta, maxStock = 999) {
+            const input = document.getElementById(`input-qty-${itemId}`);
+            if (!input) return;
+            let val = (parseInt(input.value) || 1) + delta;
+            if (val < 1) val = 1;
+            if (val > maxStock) val = maxStock;
+            input.value = val;
+        }
 
-            if (subtab === "tickets") {
-                if(ticketsBtn) ticketsBtn.className = "border-b-2 border-amber-500 pb-2 px-2 text-sm font-bold text-amber-400 transition-all";
-                if(inventoryBtn) inventoryBtn.className = "border-b-2 border-transparent pb-2 px-2 text-sm font-semibold text-slate-400 hover:text-slate-200 transition-all";
-                if(ticketsView) ticketsView.classList.replace("hidden", "block");
-                if(inventoryView) inventoryView.classList.replace("block", "hidden");
-                renderTicketsQueue();
-            } else {
-                if(inventoryBtn) inventoryBtn.className = "border-b-2 border-amber-500 pb-2 px-2 text-sm font-bold text-amber-400 transition-all";
-                if(ticketsBtn) ticketsBtn.className = "border-b-2 border-transparent pb-2 px-2 text-sm font-semibold text-slate-400 hover:text-slate-200 transition-all";
-                if(inventoryView) inventoryView.classList.replace("hidden", "block");
-                if(ticketsView) ticketsView.classList.replace("block", "hidden");
-                renderAdminInventoryTable();
-            }
+        function addToCartTicket(itemId) {
+            const item = inventory.find(i => i.id === itemId);
+            const qty = parseInt(document.getElementById(`input-qty-${itemId}`).value) || 1;
+            if (qty > item.stock) return createToast("Warning", "Exceeds stock limit", "warning");
+            cart[itemId] = (cart[itemId] || 0) + qty;
+            updateGlobalBadges();
+            renderPartsGrid();
+            createToast("Added", "Item added to list.", "success");
         }
 
         function renderFilterTabs() {
-            const categories = ["All", ...new Set(inventory.map(item => item.category))];
-            const filterContainer = document.getElementById("category-filters");
-            if (!filterContainer) return;
-            filterContainer.innerHTML = "";
-
+            const categories = ["All", ...new Set(inventory.map(i => i.category))];
+            const container = document.getElementById("category-filters");
+            container.innerHTML = "";
             categories.forEach(cat => {
                 const btn = document.createElement("button");
                 btn.innerText = cat;
-                btn.className = cat === currentFilterCategory 
-                    ? "text-xs font-bold px-3 py-1.5 rounded-md bg-slate-700 text-amber-400 border border-amber-500/30"
-                    : "text-xs font-medium px-3 py-1.5 rounded-md bg-slate-800 text-slate-400 hover:bg-slate-750 hover:text-slate-200 transition-all";
-                
-                btn.onclick = function() {
-                    currentFilterCategory = cat;
-                    renderFilterTabs();
-                    filterInventory();
-                };
-                filterContainer.appendChild(btn);
+                btn.className = cat === currentFilterCategory ? "text-xs font-bold px-3 py-1.5 rounded bg-slate-700 text-amber-400" : "text-xs px-3 py-1.5 rounded bg-slate-800 text-slate-400";
+                btn.onclick = () => { currentFilterCategory = cat; renderFilterTabs(); renderPartsGrid(); };
+                container.appendChild(btn);
             });
         }
 
         function renderPartsGrid() {
             const grid = document.getElementById("parts-grid");
-            if (!grid) return;
             grid.innerHTML = "";
-
-            const searchQuery = document.getElementById("search-input").value.toLowerCase();
-            let matchesFound = 0;
-
+            const query = document.getElementById("search-input").value.toLowerCase();
             inventory.forEach(item => {
-                const matchCategory = currentFilterCategory === "All" || item.category === currentFilterCategory;
-                const matchText = item.name.toLowerCase().includes(searchQuery) || 
-                                  item.location.toLowerCase().includes(searchQuery) || 
-                                  (item.sku && item.sku.toLowerCase().includes(searchQuery));
-
-                if (matchCategory && matchText) {
-                    matchesFound++;
+                if ((currentFilterCategory === "All" || item.category === currentFilterCategory) && (item.name.toLowerCase().includes(query) || item.sku.toLowerCase().includes(query))) {
                     const card = document.createElement("div");
-                    card.className = "bg-slate-950 rounded-xl border border-slate-800 p-4 flex flex-col justify-between hover:border-slate-700 transition-all duration-200 shadow-md group";
-                    
-                    const isOutOfStock = parseInt(item.stock) <= 0;
-                    const cardCartQty = cart[item.id] || 0;
-
+                    card.className = "bg-slate-950 rounded-xl border border-slate-800 p-4 flex flex-col justify-between";
                     card.innerHTML = `
-                        <div class="space-y-2">
-                            <div class="flex justify-between items-start gap-2">
-                                <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400">${item.category}</span>
-                                <span class="text-xs text-slate-500 font-mono tracking-tight">${item.location.split(' - ')[1] || item.location}</span>
-                            </div>
-                            <div class="space-y-0.5">
-                                <span class="text-[11px] font-mono font-semibold text-amber-500/90 tracking-wide block">SKU: ${item.sku || 'N/A'}</span>
-                                <h4 class="font-bold text-slate-100 group-hover:text-amber-400 transition-colors line-clamp-2 min-h-[2.5rem]">${item.name}</h4>
-                            </div>
-                            <div class="flex items-center gap-1.5 text-xs text-slate-400">
-                                <span class="w-2 h-2 rounded-full ${isOutOfStock ? 'bg-rose-500' : parseInt(item.stock) < 5 ? 'bg-amber-500' : 'bg-emerald-500'}"></span>
-                                Stock Count: <span class="font-bold ${isOutOfStock ? 'text-rose-400' : 'text-slate-200'}">${item.stock} units</span>
-                            </div>
+                        <div>
+                            <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-slate-900 text-slate-400">${item.category}</span>
+                            <h4 class="font-bold text-slate-100 mt-2">${item.name}</h4>
+                            <p class="text-xs text-slate-400 mt-1">Stock: ${item.stock} | ${item.location}</p>
                         </div>
-
-                        <div class="mt-4 pt-3 border-t border-slate-900 flex items-center justify-between gap-2">
-                            <div class="flex items-center bg-slate-900 border border-slate-800 rounded-md overflow-hidden">
-                                <button onclick="adjustCardQuantityInput(${item.id}, -1)" ${isOutOfStock ? 'disabled' : ''} class="px-2 py-1 hover:bg-slate-800 text-slate-400 font-bold text-sm disabled:opacity-40">-</button>
-                                <input type="number" id="input-qty-${item.id}" min="1" max="${item.stock}" value="1" ${isOutOfStock ? 'disabled' : ''} class="w-10 bg-transparent text-center font-bold text-xs text-slate-200 focus:outline-none">
-                                <button onclick="adjustCardQuantityInput(${item.id}, 1, ${item.stock})" ${isOutOfStock ? 'disabled' : ''} class="px-2 py-1 hover:bg-slate-800 text-slate-400 font-bold text-sm disabled:opacity-40">+</button>
-                            </div>
-
-                            <button onclick="addToCartTicket(${item.id})" ${isOutOfStock ? 'disabled' : ''} class="flex-1 text-xs font-bold py-2 px-2.5 rounded bg-slate-800 text-amber-400 border border-amber-500/20 hover:bg-amber-500 hover:text-slate-950 transition-all duration-200 flex items-center justify-center gap-1 disabled:opacity-30">
-                                Add to List ${cardCartQty > 0 ? `(${cardCartQty})` : ''}
-                            </button>
+                        <div class="mt-4 flex gap-2">
+                            <input type="number" id="input-qty-${item.id}" min="1" max="${item.stock}" value="1" class="w-12 bg-slate-900 text-center text-xs text-slate-200 border border-slate-700 rounded">
+                            <button onclick="addToCartTicket(${item.id})" class="flex-1 text-xs font-bold py-1.5 rounded bg-amber-500 text-slate-950">Add</button>
                         </div>
                     `;
                     grid.appendChild(card);
                 }
             });
-
-            document.getElementById("empty-browse-state").classList.toggle("hidden", matchesFound > 0);
-        }
-
-        function filterInventory() {
-            renderPartsGrid();
         }
 
         function updateGlobalBadges() {
-            const uniqueCartCount = Object.keys(cart).length;
-            const cartBadge = document.getElementById("cart-badge");
-            if (cartBadge) {
-                cartBadge.innerText = uniqueCartCount;
-                cartBadge.classList.toggle("hidden", uniqueCartCount === 0);
-            }
-
-            const unfulfilledCount = requests.filter(r => r.status === "Pending").length;
-            const pendingBadge = document.getElementById("pending-badge");
-            if (pendingBadge) {
-                pendingBadge.innerText = unfulfilledCount;
-                pendingBadge.classList.toggle("hidden", unfulfilledCount === 0);
-            }
+            document.getElementById("cart-badge").innerText = Object.keys(cart).length;
+            document.getElementById("cart-badge").classList.toggle("hidden", Object.keys(cart).length === 0);
+            const pending = requests.filter(r => r.status === "Pending").length;
+            document.getElementById("pending-badge").innerText = pending;
+            document.getElementById("pending-badge").classList.toggle("hidden", pending === 0);
         }
 
         function renderCartList() {
             const container = document.getElementById("cart-items-container");
-            if (!container) return;
             container.innerHTML = "";
-
-            const cartKeys = Object.keys(cart);
-            if (cartKeys.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-16 text-slate-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-slate-700 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
-                        <p class="text-sm font-medium">Your request manifest is blank.</p>
-                    </div>
-                `;
-                document.getElementById("cart-total-types").innerText = "0";
-                return;
-            }
-
-            document.getElementById("cart-total-types").innerText = cartKeys.length;
-
-            cartKeys.forEach(key => {
-                const itemId = parseInt(key);
-                const item = inventory.find(i => Number(i.id) === Number(itemId));
+            Object.keys(cart).forEach(id => {
+                const item = inventory.find(i => i.id == id);
                 if (!item) return;
-
                 const row = document.createElement("div");
-                row.className = "py-3 flex justify-between items-center gap-4";
-                row.innerHTML = `
-                    <div class="flex-1 min-w-0">
-                        <div class="flex items-center gap-2 truncate">
-                            <span class="text-[10px] font-mono bg-slate-900 border border-slate-800 text-amber-400 px-1 py-0.5 rounded flex-shrink-0">${item.sku || 'No SKU'}</span>
-                            <h4 class="font-semibold text-slate-200 text-sm truncate">${item.name}</h4>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <div class="flex items-center bg-slate-900 border border-slate-800 rounded">
-                            <button onclick="changeCartItemQty(${itemId}, -1)" class="px-2 py-0.5 hover:bg-slate-800 text-slate-400 font-bold text-xs">-</button>
-                            <span class="w-8 text-center text-xs font-mono font-bold text-amber-400">${cart[key]}</span>
-                            <button onclick="changeCartItemQty(${itemId}, 1)" class="px-2 py-0.5 hover:bg-slate-800 text-slate-400 font-bold text-xs">+</button>
-                        </div>
-                        <button onclick="removeCartItemNode(${itemId})" class="text-slate-500 hover:text-rose-400 p-1">✕</button>
-                    </div>
-                `;
+                row.className = "py-2 flex justify-between items-center text-sm";
+                row.innerHTML = `<span>${item.name} (x${cart[id]})</span> <button onclick="delete cart[${id}]; renderCartList(); updateGlobalBadges();" class="text-rose-400">✕</button>`;
                 container.appendChild(row);
             });
         }
 
-        function changeCartItemQty(itemId, delta) {
-            const item = inventory.find(i => Number(i.id) === Number(itemId));
-            if (!item) return;
-
-            let currentQty = cart[itemId] || 0;
-            currentQty += delta;
-
-            if (currentQty <= 0) {
-                removeCartItemNode(itemId);
-                return;
-            }
-            if (currentQty > parseInt(item.stock)) {
-                createToast("Insufficient Stock", "Cannot request more units than what is left in storage bins.", "warning");
-                return;
-            }
-
-            cart[itemId] = currentQty;
-            updateGlobalBadges();
-            renderCartList();
-        }
-
-        function removeCartItemNode(itemId) {
-            delete cart[itemId];
-            updateGlobalBadges();
-            renderCartList();
-        }
-
-        function clearCart() {
-            cart = {};
-            updateGlobalBadges();
-            renderCartList();
-        }
+        function clearCart() { cart = {}; renderCartList(); updateGlobalBadges(); }
 
         async function submitRequestTicket() {
-            try {
-                const nameInput = document.getElementById("req-name");
-                const subteamSelect = document.getElementById("req-subteam");
-                const notesInput = document.getElementById("req-notes");
-                if (!nameInput || !subteamSelect || !notesInput) return;
+            const name = document.getElementById("req-name").value.trim();
+            if (!name || Object.keys(cart).length === 0) return createToast("Error", "Fill name and add items.", "warning");
 
-                const name = nameInput.value.trim();
-                if (!name) {
-                    createToast("Verification Alert", "Please fill in a lead builder name signature to dispatch.", "warning");
-                    nameInput.focus();
-                    return;
-                }
+            Object.keys(cart).forEach(id => {
+                const item = inventory.find(i => i.id == id);
+                if (item) item.stock -= cart[id];
+            });
 
-                const cartKeys = Object.keys(cart);
-                if (cartKeys.length === 0) {
-                    createToast("Action Aborted", "Cannot process an empty request list.", "warning");
-                    return;
-                }
+            const ticket = {
+                id: Date.now(),
+                requester: name,
+                subteam: document.getElementById("req-subteam").value,
+                notes: document.getElementById("req-notes").value,
+                items: Object.keys(cart).map(id => ({ itemId: id, name: inventory.find(i => i.id == id).name, qty: cart[id] })),
+                timestamp: new Date().toLocaleString(),
+                status: "Pending"
+            };
 
-                cartKeys.forEach(key => {
-                    const id = parseInt(key);
-                    const invItem = inventory.find(i => Number(i.id) === Number(id));
-                    if (invItem) {
-                        invItem.stock = parseInt(invItem.stock) - parseInt(cart[key]);
-                    }
-                });
+            requests.unshift(ticket);
+            cart = {};
+            renderCartList();
+            updateGlobalBadges();
+            switchViewDirect("browse");
 
-                const orderedItems = cartKeys.map(key => {
-                    const id = parseInt(key);
-                    const invItem = inventory.find(i => Number(i.id) === Number(id));
-                    return {
-                        itemId: id,
-                        name: invItem ? invItem.name : "Unknown Component",
-                        sku: invItem ? (invItem.sku || "N/A") : "N/A",
-                        qty: cart[key],
-                        location: invItem ? invItem.location : "N/A"
-                    };
-                });
-
-                const newTicketPayload = {
-                    id: Date.now(),
-                    requester: name,
-                    subteam: subteamSelect.value,
-                    notes: notesInput.value.trim() || "No notes appended.",
-                    items: orderedItems,
-                    timestamp: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                    status: "Pending"
-                };
-
-                requests.unshift(newTicketPayload);
-                cart = {}; 
-                nameInput.value = "";
-                notesInput.value = "";
-
-                renderCartList();
-                updateGlobalBadges();
-                switchViewDirect("browse");
-
-                // 1. Transmit the ticket data using the action name your Apps Script expects ("submitTicket")
-                await transmitCloudMutation(
-                    "submitTicket", 
-                    newTicketPayload, 
-                    "Ticket Dispatched", 
-                    `Filed ticket under identity: ${name}.`
-                );
-
-                // 2. Immediately send a second payload to update the inventory stock levels in the Google Sheet
-                await transmitCloudMutation(
-                    "bulkUpdateInventory", 
-                    { inventory: inventory }, 
-                    null, 
-                    null
-                );
-
-            } catch (error) {
-                console.error("Critical submission trace:", error);
-            }
+            await transmitCloudMutation("submitTicket", ticket);
+            await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory });
+            createToast("Success", "Ticket dispatched!", "success");
         }
 
         function renderPublicHistory() {
             const container = document.getElementById("public-history-container");
-            if (!container) return;
-            container.innerHTML = "";
-
-            const confirmedRequests = requests.filter(r => r.status === "Fulfilled" || r.status === "Denied");
-
-            if (confirmedRequests.length === 0) {
-                container.innerHTML = `<div class="text-center py-12 bg-slate-950 rounded-xl border border-slate-800 text-slate-500 text-sm">No historical confirmed requests logged yet.</div>`;
-                return;
-            }
-
-            confirmedRequests.forEach(ticket => {
-                const historyCard = document.createElement("div");
-                const isFulfilled = ticket.status === "Fulfilled";
-                const borderClass = isFulfilled ? "border-emerald-950 bg-slate-950/40" : "border-rose-950 bg-slate-950/40";
-                
-                historyCard.className = `p-4 rounded-xl border ${borderClass} space-y-3`;
-                
-                let lineItems = "";
-                const itemsArray = Array.isArray(ticket.items) ? ticket.items : [];
-                itemsArray.forEach(itm => {
-                    lineItems += `
-                        <li class="text-xs text-slate-300">
-                            <span class="font-mono text-amber-500">[${itm.sku || 'N/A'}]</span> ${itm.name} <strong class="text-slate-100 ml-1">x${itm.qty}</strong>
-                        </li>
-                    `;
-                });
-
-                historyCard.innerHTML = `
-                    <div class="flex justify-between items-start border-b border-slate-900 pb-2">
-                        <div>
-                            <span class="text-sm font-bold text-slate-200">${ticket.requester}</span>
-                            <span class="text-[10px] ml-2 px-1.5 py-0.5 font-mono bg-slate-900 text-slate-400 rounded">${ticket.subteam}</span>
-                            <p class="text-[10px] text-slate-500 font-mono mt-0.5">Processed on ${ticket.timestamp}</p>
-                        </div>
-                        <span class="text-xs px-2.5 py-0.5 rounded-full font-bold ${isFulfilled ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}">${ticket.status}</span>
-                    </div>
-                    <ul class="list-disc list-inside space-y-0.5 pl-1">${lineItems}</ul>
-                    <div class="text-xs text-slate-500 bg-slate-900/20 px-2 py-1.5 rounded">Notes: "${ticket.notes}"</div>
-                `;
-                container.appendChild(historyCard);
-            });
+            container.innerHTML = requests.filter(r => r.status !== "Pending").map(r => `<div class="p-3 bg-slate-950 border border-slate-800 rounded text-xs"><b>${r.requester}</b> - ${r.status}</div>`).join('') || "No history.";
         }
 
         function renderAdminView() {
-            const ordersBadge = document.getElementById("admin-total-orders");
-            if (ordersBadge) ordersBadge.innerText = requests.filter(r => r.status === "Pending").length;
-            renderTicketsQueue();
-        }
-
-        function renderTicketsQueue() {
             const container = document.getElementById("tickets-queue-container");
-            if (!container) return;
-            container.innerHTML = "";
-
-            const pendingTickets = requests.filter(r => r.status === "Pending");
-
-            if (pendingTickets.length === 0) {
-                container.innerHTML = `<div class="text-center py-12 bg-slate-950 rounded-xl border border-slate-800 text-slate-500 text-sm">No pending allocation tickets left inside queue stack rows.</div>`;
-                return;
-            }
-
-            pendingTickets.forEach(ticket => {
-                const ticketCard = document.createElement("div");
-                ticketCard.className = "p-4 rounded-xl border border-amber-500/40 bg-slate-950 space-y-3 shadow";
-                
-                let itemsListHtml = "";
-                ticket.items.forEach(itm => {
-                    itemsListHtml += `
-                        <li class="text-xs flex items-center justify-between bg-slate-900 px-2.5 py-1.5 rounded border border-slate-800/50">
-                            <span class="text-slate-200 font-medium">
-                                <span class="text-[10px] font-mono text-amber-400 mr-2">[${itm.sku || 'N/A'}]</span>
-                                ${itm.name} 
-                            </span>
-                            <span class="bg-slate-800 px-2 py-0.5 text-amber-400 font-mono font-bold rounded text-[11px]">x${itm.qty}</span>
-                        </li>
-                    `;
-                });
-
-                ticketCard.innerHTML = `
-                    <div class="flex justify-between items-center border-b border-slate-900 pb-2">
-                        <div>
-                            <h4 class="font-bold text-slate-100 text-sm">${ticket.requester} <span class="text-[10px] font-normal text-slate-400 bg-slate-900 px-1.5 py-0.5 rounded ml-2">${ticket.subteam}</span></h4>
-                            <p class="text-[11px] text-slate-500 font-mono">Dispatched at ${ticket.timestamp}</p>
-                        </div>
-                    </div>
-                    <ul class="space-y-1">${itemsListHtml}</ul>
-                    <p class="text-xs text-slate-400 italic bg-slate-900/30 p-2 rounded">Log note: "${ticket.notes}"</p>
-                    <div class="flex justify-end gap-2 pt-2 border-t border-slate-900">
-                        <button onclick="rejectTicket(${ticket.id})" class="px-3 py-1.5 rounded bg-slate-900 border border-slate-700 text-rose-400 text-xs font-semibold">Deny Request</button>
-                        <button onclick="fulfillTicket(${ticket.id})" class="px-4 py-1.5 rounded bg-emerald-600 text-white font-bold text-xs shadow-sm">Approve & Fulfill</button>
-                    </div>
-                `;
-                container.appendChild(ticketCard);
-            });
+            container.innerHTML = requests.filter(r => r.status === "Pending").map(r => `
+                <div class="p-4 bg-slate-950 border border-amber-500/40 rounded space-y-2">
+                    <p class="text-xs font-bold">${r.requester} (${r.subteam})</p>
+                    <button onclick="fulfillTicket(${r.id})" class="bg-emerald-600 text-white text-xs px-3 py-1 rounded">Approve</button>
+                    <button onclick="rejectTicket(${r.id})" class="bg-rose-600 text-white text-xs px-3 py-1 rounded">Deny</button>
+                </div>
+            `).join('') || "No pending tickets.";
         }
 
-        async function fulfillTicket(ticketId) {
-            const ticket = requests.find(r => Number(r.id) === Number(ticketId));
-            if (!ticket) return;
-
-            ticket.status = "Fulfilled";
+        async function fulfillTicket(id) {
+            const t = requests.find(r => r.id === id);
+            if (!t) return;
+            t.status = "Fulfilled";
             renderAdminView();
             updateGlobalBadges();
-
-            await transmitCloudMutation(
-                "fulfillTicket", 
-                { ticketId: ticketId },
-                "Voucher Approved",
-                "Allocation confirmed. Items officially deployed."
-            );
+            await transmitCloudMutation("fulfillTicket", { ticketId: id, updatedInventory: inventory });
         }
 
-        // FULLY AUTOMATED REJECT TICKET (Updates values back and automatically updates Google Sheet)
-        async function rejectTicket(ticketId) {
-            try {
-                const ticket = requests.find(r => Number(r.id) === Number(ticketId));
-                if (!ticket) return;
-
-                ticket.items.forEach(itm => {
-                    const invItem = inventory.find(i => Number(i.id) === Number(itm.itemId));
-                    if (invItem) {
-                        invItem.stock = parseInt(invItem.stock) + parseInt(itm.qty);
-                    }
-                });
-
-                ticket.status = "Denied";
-                renderAdminView();
-                updateGlobalBadges();
-
-                await transmitCloudMutation(
-                    "rejectTicket", 
-                    { ticketId: ticketId, restoredInventory: inventory },
-                    "Request Denied",
-                    "Voucher marked as Denied. Component stock volumes safely restored."
-                );
-
-                await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory }, null, null);
-
-            } catch (error) {
-                console.error("Critical rejection trace:", error);
-            }
+        async function rejectTicket(id) {
+            const t = requests.find(r => r.id === id);
+            if (!t) return;
+            t.items.forEach(i => {
+                const inv = inventory.find(x => x.id == i.itemId);
+                if (inv) inv.stock += i.qty;
+            });
+            t.status = "Denied";
+            renderAdminView();
+            updateGlobalBadges();
+            await transmitCloudMutation("rejectTicket", { ticketId: id, restoredInventory: inventory });
         }
 
         function renderAdminInventoryTable() {
             const tbody = document.getElementById("admin-inventory-table");
-            if (!tbody) return;
-            tbody.innerHTML = "";
-
-            inventory.forEach(item => {
-                const row = document.createElement("tr");
-                row.className = "hover:bg-slate-900/60 border-b border-slate-800/40 text-slate-300";
-                row.innerHTML = `
-                    <td class="p-3 font-medium text-slate-100">${item.name}</td>
-                    <td class="p-3 font-mono text-xs text-amber-400 font-semibold">${item.sku || '—'}</td>
-                    <td class="p-3 text-xs text-slate-400"><span class="bg-slate-900 border border-slate-800 px-2 py-0.5 rounded text-slate-400">${item.category}</span></td>
-                    <td class="p-3 font-mono text-xs text-slate-400">${item.location}</td>
-                    <td class="p-3 text-center">
-                        <div class="flex items-center justify-center gap-2">
-                            <button onclick="quickUpdateStock(${item.id}, -5)" class="bg-slate-800 text-slate-400 text-xs px-1 rounded">-5</button>
-                            <button onclick="quickUpdateStock(${item.id}, -1)" class="bg-slate-800 text-slate-400 text-xs px-1.5 rounded">-1</button>
-                            <span id="admin-stock-val-${item.id}" class="w-10 text-center font-mono font-bold text-amber-400 text-xs">${item.stock}</span>
-                            <button onclick="quickUpdateStock(${item.id}, 1)" class="bg-slate-800 text-slate-400 text-xs px-1.5 rounded">+1</button>
-                            <button onclick="quickUpdateStock(${item.id}, 5)" class="bg-slate-800 text-slate-400 text-xs px-1 rounded">+5</button>
-                        </div>
-                    </td>
-                    <td class="p-3 text-right">
-                        <div class="flex justify-end items-center gap-3">
-                            <button id="save-stock-btn-${item.id}" onclick="commitStockChange(${item.id})" class="px-3 py-1 rounded bg-slate-800 text-slate-400 font-bold text-xs transition-all border border-slate-700/60" title="Save Stock Changes to Cloud">
-                                Save
-                            </button>
-                            <button onclick="deleteInventoryItemSchema(${item.id})" class="text-rose-500 hover:text-rose-400 p-1 text-sm font-bold" title="Delete Component">✕</button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
+            tbody.innerHTML = inventory.map(i => `
+                <tr class="border-b border-slate-800 text-xs">
+                    <td class="p-3">${i.name}</td>
+                    <td class="p-3 font-mono">${i.sku}</td>
+                    <td class="p-3">${i.category}</td>
+                    <td class="p-3">${i.location}</td>
+                    <td class="p-3 text-center font-bold">${i.stock}</td>
+                    <td class="p-3 text-right"><button onclick="quickUpdateStock(${i.id}, 1)" class="bg-slate-800 px-2 py-1 rounded">+1</button></td>
+                </tr>
+            `).join('');
         }
 
-        async function quickUpdateStock(itemId, delta) {
-            const item = inventory.find(i => i.id === itemId);
+        async function quickUpdateStock(id, delta) {
+            const item = inventory.find(i => i.id === id);
             if (!item) return;
-
-            item.stock = parseInt(item.stock) + delta;
-            if (item.stock < 0) item.stock = 0;
-
-            document.getElementById(`admin-stock-val-${itemId}`).innerText = item.stock;
-            
-            await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory }, null, null);
-        }
-
-        async function commitStockChange(itemId) {
-            const item = inventory.find(i => Number(i.id) === Number(itemId));
-            if (!item) return;
-
-            const saveBtn = document.getElementById(`save-stock-btn-${itemId}`);
-            if (saveBtn) {
-                saveBtn.className = "px-3 py-1 rounded bg-slate-800 text-slate-400 font-bold text-xs transition-all border border-slate-700/60 opacity-60";
-            }
-
-            await transmitCloudMutation(
-                "bulkUpdateInventory", 
-                { inventory: inventory },
-                "Quantity Matrix Saved",
-                `Directly committed corrected capacity logs to cloud rows for ${item.name}.`
-            );
+            item.stock = Math.max(0, item.stock + delta);
+            renderAdminInventoryTable();
+            await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory });
         }
 
         function openNewItemModal() { document.getElementById("new-item-drawer").classList.remove("hidden"); }
         function closeNewItemModal() { document.getElementById("new-item-drawer").classList.add("hidden"); }
 
         async function saveNewItem() {
-            const name = document.getElementById("add-item-name").value.trim();
-            const sku = document.getElementById("add-item-sku").value.trim().toUpperCase() || "N/A";
-            const category = document.getElementById("add-item-category").value;
-            const stock = parseInt(document.getElementById("add-item-stock").value) || 0;
-            const location = document.getElementById("add-item-location").value.trim() || "Unassigned Shelf Bin";
-
-            if (!name) {
-                createToast("Validation Error", "Item profiles require a valid name footprint.", "warning");
-                return;
-            }
-
-            const newItemNode = { id: Date.now(), name: name, sku: sku, category: category, stock: stock, location: location };
-            inventory.push(newItemNode);
-            renderAdminInventoryTable();
+            const newItem = {
+                id: Date.now(),
+                name: document.getElementById("add-item-name").value,
+                sku: document.getElementById("add-item-sku").value || "N/A",
+                category: document.getElementById("add-item-category").value,
+                stock: parseInt(document.getElementById("add-item-stock").value) || 0,
+                location: document.getElementById("add-item-location").value || "Bin"
+            };
+            inventory.push(newItem);
             closeNewItemModal();
-
-            await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory }, "Catalog Expanded", `Loaded registry parameters for ${name}.`);
-        }
-
-        async function deleteInventoryItemSchema(itemId) {
-            const target = inventory.find(i => Number(i.id) === Number(itemId));
-            if (!target) return;
-            inventory = inventory.filter(i => Number(i.id) !== Number(itemId));
             renderAdminInventoryTable();
-
-            await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory }, "Profile Purged", `Scrubbed row metrics for ${target.name}.`);
+            await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory });
         }
 
-        function createToast(title, message, type = "success") {
-            const container = document.getElementById("toast-container");
-            if (!container) return;
-            const toast = document.createElement("div");
-            const colorClasses = type === "success" ? "bg-slate-900 border-emerald-500 text-emerald-400" : type === "warning" ? "bg-slate-900 border-amber-500 text-amber-400" : "bg-slate-900 border-rose-500 text-rose-400";
-            toast.className = `border-l-4 p-4 rounded-lg shadow-xl flex items-start gap-3 transition-all duration-300 transform translate-y-2 ${colorClasses}`;
-            toast.innerHTML = `<div class="flex-1"><h5 class="font-bold text-sm text-slate-100">${title}</h5><p class="text-xs text-slate-400 mt-0.5">${message}</p></div><button class="text-slate-500 hover:text-slate-300 text-xs font-bold" onclick="this.parentElement.remove()">✕</button>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 4000);
+        function createToast(title, msg, type) {
+            const box = document.getElementById("toast-container");
+            const t = document.createElement("div");
+            t.className = "bg-slate-900 border-l-4 border-amber-500 p-3 rounded shadow text-xs text-slate-100";
+            t.innerHTML = `<b>${title}</b><p>${msg}</p>`;
+            box.appendChild(t);
+            setTimeout(() => t.remove(), 3000);
         }
     </script>
 </body>
