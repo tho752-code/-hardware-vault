@@ -749,11 +749,13 @@
                     return;
                 }
 
+                // 1. Immediately lower stock counts upon submission
                 cartKeys.forEach(key => {
                     const id = parseInt(key);
                     const invItem = inventory.find(i => Number(i.id) === Number(id));
                     if (invItem) {
                         invItem.stock = parseInt(invItem.stock) - parseInt(cart[key]);
+                        if (invItem.stock < 0) invItem.stock = 0; // Guard against negative inventory
                     }
                 });
 
@@ -788,24 +790,52 @@
                 updateGlobalBadges();
                 switchViewDirect("browse");
 
-                // 1. Transmit the ticket data using the action name your Apps Script expects ("submitTicket")
+                // 2. Send the ticket to the Google Sheet backend
                 await transmitCloudMutation(
                     "submitTicket", 
                     newTicketPayload, 
                     "Ticket Dispatched", 
-                    `Filed ticket under identity: ${name}.`
+                    `Filed ticket under identity: ${name}. Stock updated.`
                 );
 
-                // 2. Immediately send a second payload to update the inventory stock levels in the Google Sheet
-                await transmitCloudMutation(
-                    "bulkUpdateInventory", 
-                    { inventory: inventory }, 
-                    null, 
-                    null
-                );
+                // 3. Immediately sync the lowered inventory matrix to the Google Sheet
+                await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory }, null, null);
 
             } catch (error) {
                 console.error("Critical submission trace:", error);
+            }
+        }
+
+        // Only return back stock if request is denied
+        async function rejectTicket(ticketId) {
+            try {
+                const ticket = requests.find(r => Number(r.id) === Number(ticketId));
+                if (!ticket) return;
+
+                // Restore stock back into inventory rows
+                ticket.items.forEach(itm => {
+                    const invItem = inventory.find(i => Number(i.id) === Number(itm.itemId));
+                    if (invItem) {
+                        invItem.stock = parseInt(invItem.stock) + parseInt(itm.qty);
+                    }
+                });
+
+                ticket.status = "Denied";
+                renderAdminView();
+                updateGlobalBadges();
+
+                // Send rejection status update and the restored inventory stock to the cloud
+                await transmitCloudMutation(
+                    "rejectTicket", 
+                    { ticketId: ticketId, restoredInventory: inventory },
+                    "Request Denied",
+                    "Voucher marked as Denied. Component stock volumes safely restored."
+                );
+
+                await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory }, null, null);
+
+            } catch (error) {
+                console.error("Critical rejection trace:", error);
             }
         }
 
@@ -921,37 +951,6 @@
                 "Voucher Approved",
                 "Allocation confirmed. Items officially deployed."
             );
-        }
-
-        // FULLY AUTOMATED REJECT TICKET (Updates values back and automatically updates Google Sheet)
-        async function rejectTicket(ticketId) {
-            try {
-                const ticket = requests.find(r => Number(r.id) === Number(ticketId));
-                if (!ticket) return;
-
-                ticket.items.forEach(itm => {
-                    const invItem = inventory.find(i => Number(i.id) === Number(itm.itemId));
-                    if (invItem) {
-                        invItem.stock = parseInt(invItem.stock) + parseInt(itm.qty);
-                    }
-                });
-
-                ticket.status = "Denied";
-                renderAdminView();
-                updateGlobalBadges();
-
-                await transmitCloudMutation(
-                    "rejectTicket", 
-                    { ticketId: ticketId, restoredInventory: inventory },
-                    "Request Denied",
-                    "Voucher marked as Denied. Component stock volumes safely restored."
-                );
-
-                await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory }, null, null);
-
-            } catch (error) {
-                console.error("Critical rejection trace:", error);
-            }
         }
 
         function renderAdminInventoryTable() {
