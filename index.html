@@ -410,14 +410,13 @@
         function startSmartAutoSync() {
             if (autoSyncInterval) clearInterval(autoSyncInterval);
 
-            // Set to 5 seconds (5000ms) for quick testing, change to 45000 later when finished
             autoSyncInterval = setInterval(async () => {
                 if (document.hidden) {
-                    return; // Only stops if you minimize the tab
+                    return; // Only stops if tab is hidden
                 }
                 console.log("Auto-sync interval firing...");
                 await silentBackgroundSync();
-            }, 45000);
+            }, 45000); // Set to 45 seconds
         }
 
         async function silentBackgroundSync() {
@@ -472,6 +471,7 @@
         window.addEventListener("click", resetIdleTimer);
         window.addEventListener("scroll", resetIdleTimer);
         
+        // --- SINGLE, CLEAN WINDOW.ONLOAD ---
         window.onload = async function() {
             const savedAuth = sessionStorage.getItem("robo_vault_auth");
             if (savedAuth === "true") {
@@ -495,29 +495,16 @@
             renderPublicHistory();
             renderAdminView();
             updateGlobalBadges();
-            
 
             switchViewDirect(savedView);
             if (savedView === "admin") {
                 switchAdminSubTabDirect(savedSubTab);
             }
 
-            window.onload = async function() {
-            // ... your existing onload code ...
-
-            switchViewDirect(savedView);
-            if (savedView === "admin") {
-                switchAdminSubTabDirect(savedSubTab);
-            }
-
+            // START SMART AUTO SYNC HERE CLEANLY
             startSmartAutoSync();
             resetIdleTimer();
 
-            document.getElementById("admin-passkey-input").addEventListener("keyup", function(e) {
-                if (e.key === "Enter") verifyAdminPasskey();
-            });
-        };
-            
             document.getElementById("admin-passkey-input").addEventListener("keyup", function(e) {
                 if (e.key === "Enter") verifyAdminPasskey();
             });
