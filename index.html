@@ -199,7 +199,7 @@
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
                 <div>
                     <h3 class="text-xl font-bold text-slate-100">Request Status Log</h3>
-                    <p class="text-xs text-slate-400">Public ledger tracking all completed, fulfilled, or denied requests.</p>
+                    <p class="text-xs text-slate-400">Public ledger tracking all completed, confirmed, or denied requests.</p>
                 </div>
             </div>
             <div id="public-history-container" class="space-y-4"></div>
@@ -775,7 +775,14 @@
                     subteam: subteamSelect.value,
                     notes: notesInput.value.trim() || "No notes appended.",
                     items: orderedItems,
-                    timestamp: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    timestamp: new Date().toLocaleString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true
+                    }),
                     status: "Pending"
                 };
 
@@ -785,11 +792,10 @@
                 notesInput.value = "";
 
                 renderCartList();
-                renderAdminInventoryTable(); // <-- Instantly updates Admin table stock counts
+                renderAdminInventoryTable(); 
                 updateGlobalBadges();
                 switchViewDirect("browse");
 
-                // 1. Transmit the ticket data using the action name your Apps Script expects ("submitTicket")
                 await transmitCloudMutation(
                     "submitTicket", 
                     newTicketPayload, 
@@ -797,7 +803,6 @@
                     `Filed ticket under identity: ${name}.`
                 );
 
-                // 2. Immediately send a second payload to update the inventory stock levels in the Google Sheet
                 await transmitCloudMutation(
                     "bulkUpdateInventory", 
                     { inventory: inventory }, 
@@ -815,7 +820,7 @@
             if (!container) return;
             container.innerHTML = "";
 
-            const confirmedRequests = requests.filter(r => r.status === "Fulfilled" || r.status === "Denied").sort((a, b) => b.id - a.id);
+            const confirmedRequests = requests.filter(r => r.status === "Confirmed" || r.status === "Denied").sort((a, b) => b.id - a.id);
 
             if (confirmedRequests.length === 0) {
                 container.innerHTML = `<div class="text-center py-12 bg-slate-950 rounded-xl border border-slate-800 text-slate-500 text-sm">No historical confirmed requests logged yet.</div>`;
@@ -824,8 +829,8 @@
 
             confirmedRequests.forEach(ticket => {
                 const historyCard = document.createElement("div");
-                const isFulfilled = ticket.status === "Fulfilled";
-                const borderClass = isFulfilled ? "border-emerald-950 bg-slate-950/40" : "border-rose-950 bg-slate-950/40";
+                const isConfirmed = ticket.status === "Confirmed";
+                const borderClass = isConfirmed ? "border-emerald-950 bg-slate-950/40" : "border-rose-950 bg-slate-950/40";
                 
                 historyCard.className = `p-4 rounded-xl border ${borderClass} space-y-3`;
                 
@@ -846,7 +851,7 @@
                             <span class="text-[10px] ml-2 px-1.5 py-0.5 font-mono bg-slate-900 text-slate-400 rounded">${ticket.subteam}</span>
                             <p class="text-[10px] text-slate-500 font-mono mt-0.5">Processed on ${ticket.timestamp}</p>
                         </div>
-                        <span class="text-xs px-2.5 py-0.5 rounded-full font-bold ${isFulfilled ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}">${ticket.status}</span>
+                        <span class="text-xs px-2.5 py-0.5 rounded-full font-bold ${isConfirmed ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}">${ticket.status}</span>
                     </div>
                     <ul class="list-disc list-inside space-y-0.5 pl-1">${lineItems}</ul>
                     <div class="text-xs text-slate-500 bg-slate-900/20 px-2 py-1.5 rounded">Notes: "${ticket.notes}"</div>
@@ -901,7 +906,7 @@
                     <p class="text-xs text-slate-400 italic bg-slate-900/30 p-2 rounded">Log note: "${ticket.notes}"</p>
                     <div class="flex justify-end gap-2 pt-2 border-t border-slate-900">
                         <button onclick="rejectTicket(${ticket.id})" class="px-3 py-1.5 rounded bg-slate-900 border border-slate-700 text-rose-400 text-xs font-semibold">Deny Request</button>
-                        <button onclick="fulfillTicket(${ticket.id})" class="px-4 py-1.5 rounded bg-emerald-600 text-white font-bold text-xs shadow-sm">Approve & Fulfill</button>
+                        <button onclick="fulfillTicket(${ticket.id})" class="px-4 py-1.5 rounded bg-emerald-600 text-white font-bold text-xs shadow-sm">Approve & Confirm</button>
                     </div>
                 `;
                 container.appendChild(ticketCard);
@@ -912,14 +917,14 @@
             const ticket = requests.find(r => Number(r.id) === Number(ticketId));
             if (!ticket) return;
 
-            ticket.status = "Confirmed"; // FIX: Changed from "Fulfilled" to "Confirmed"
+            ticket.status = "Confirmed";
             renderAdminView();
             updateGlobalBadges();
 
             await transmitCloudMutation(
                 "fulfillTicket", 
                 { ticketId: ticketId },
-                "Voucher Confirmed", // FIX: Toast text update
+                "Voucher Confirmed",
                 "Allocation confirmed. Items officially deployed."
             );
         }
@@ -938,7 +943,7 @@
 
                 ticket.status = "Denied";
                 renderAdminView();
-                renderAdminInventoryTable(); // <-- Instantly update admin stock manager view if open
+                renderAdminInventoryTable(); 
                 updateGlobalBadges();
 
                 await transmitCloudMutation(
@@ -955,7 +960,6 @@
             }
         }
 
-        // Keep track of modified rows to show visual state changes
         let adminStockModifications = {};
 
         function renderAdminInventoryTable() {
@@ -967,10 +971,8 @@
                 const row = document.createElement("tr");
                 row.className = "hover:bg-slate-900/60 border-b border-slate-800/40 text-slate-300";
                 
-                // Check if this item has local unsaved modifications
                 const isModified = adminStockModifications[item.id] !== undefined;
                 
-                // Button style changes dynamically depending on whether it's modified
                 const btnClass = isModified 
                     ? "px-3 py-1 rounded bg-amber-500/20 text-amber-300 font-bold text-xs transition-all border border-amber-500 shadow-sm animate-pulse flex items-center gap-1.5 hover:bg-amber-500/30" 
                     : "px-3 py-1 rounded bg-slate-800 text-slate-400 font-bold text-xs transition-all border border-slate-700/60 flex items-center gap-1.5 hover:bg-slate-700";
@@ -1012,14 +1014,11 @@
             item.stock = parseInt(item.stock) + delta;
             if (item.stock < 0) item.stock = 0;
 
-            // Mark this item's stock as modified/unsaved
             adminStockModifications[itemId] = true;
 
-            // Update just the number and button state live without re-rendering the whole table (prevents focus loss)
             const stockValSpan = document.getElementById(`admin-stock-val-${itemId}`);
             if (stockValSpan) stockValSpan.innerText = item.stock;
 
-            // Re-render just this table row or trigger a targeted UI update for the button
             renderAdminInventoryTable();
         }
 
@@ -1027,7 +1026,6 @@
             const item = inventory.find(i => Number(i.id) === Number(itemId));
             if (!item) return;
 
-            // Clear the modified flag once saved
             delete adminStockModifications[itemId];
             renderAdminInventoryTable();
 
@@ -1066,16 +1064,11 @@
             const target = inventory.find(i => Number(i.id) === Number(itemId));
             if (!target) return;
 
-            // Remove from local inventory array
             inventory = inventory.filter(i => Number(i.id) !== Number(itemId));
-            
-            // Clean up any pending modification flag
             delete adminStockModifications[itemId];
 
-            // Re-render the admin table to update the UI
             renderAdminInventoryTable();
 
-            // Transmit using the action name your Apps Script already has built-in!
             await transmitCloudMutation(
                 "purgeItemSchema", 
                 { itemId: itemId }, 
