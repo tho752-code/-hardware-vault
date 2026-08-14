@@ -410,7 +410,7 @@
         function startSmartAutoSync() {
             if (autoSyncInterval) clearInterval(autoSyncInterval);
 
-            // Set to 5 seconds (5000ms) for quick testing, change to 45000 later when finished
+            // Change 5000 back to 45000 (45 seconds) when you are done testing
             autoSyncInterval = setInterval(async () => {
                 if (document.hidden) {
                     return; // Only stops if you minimize the tab
@@ -471,7 +471,8 @@
         window.addEventListener("keydown", resetIdleTimer);
         window.addEventListener("click", resetIdleTimer);
         window.addEventListener("scroll", resetIdleTimer);
-        
+
+        // --- SINGLE CLEAN WINDOW.ONLOAD ---
         window.onload = async function() {
             const savedAuth = sessionStorage.getItem("robo_vault_auth");
             if (savedAuth === "true") {
@@ -495,21 +496,13 @@
             renderPublicHistory();
             renderAdminView();
             updateGlobalBadges();
-            
 
             switchViewDirect(savedView);
             if (savedView === "admin") {
                 switchAdminSubTabDirect(savedSubTab);
             }
 
-            window.onload = async function() {
-            // ... your existing onload code ...
-
-            switchViewDirect(savedView);
-            if (savedView === "admin") {
-                switchAdminSubTabDirect(savedSubTab);
-            }
-
+            // START SMART AUTO SYNC HERE SAFELY
             startSmartAutoSync();
             resetIdleTimer();
 
@@ -517,35 +510,6 @@
                 if (e.key === "Enter") verifyAdminPasskey();
             });
         };
-            
-            document.getElementById("admin-passkey-input").addEventListener("keyup", function(e) {
-                if (e.key === "Enter") verifyAdminPasskey();
-            });
-        };
-
-        async function fetchCloudDatabaseRecords() {
-            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.trim() === "") return;
-            try {
-                const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getData`, { method: "GET" });
-                if (!response.ok) throw new Error("Failed to reach Apps Script endpoint");
-                
-                const jsonResult = await response.json();
-                if (jsonResult && jsonResult.status === "success") {
-                    inventory = jsonResult.inventory || [];
-                    requests = jsonResult.requests || [];
-                    
-                    localStorage.setItem("ftc_vault_inventory", JSON.stringify(inventory));
-                    localStorage.setItem("ftc_vault_requests", JSON.stringify(requests));
-                    setCloudIndicatorState("online", "Cloud database status: Sync fully active.");
-                } else {
-                    throw new Error(jsonResult.message || "Invalid schema layout.");
-                }
-            } catch (err) {
-                console.error("Cloud connection dropped:", err);
-                loadLocalDatabaseFallback();
-                setCloudIndicatorState("offline", "Database network error. Local sandbox active.");
-            }
-        }
 
         async function transmitCloudMutation(payloadAction, dataObj, successMessageTitle, successMessageBody) {
             localStorage.setItem("ftc_vault_inventory", JSON.stringify(inventory));
