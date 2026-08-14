@@ -1065,10 +1065,23 @@
         async function deleteInventoryItemSchema(itemId) {
             const target = inventory.find(i => Number(i.id) === Number(itemId));
             if (!target) return;
+
+            // Remove from local inventory array
             inventory = inventory.filter(i => Number(i.id) !== Number(itemId));
+            
+            // Clean up any pending modification flag for this item
+            delete adminStockModifications[itemId];
+
+            // Re-render the admin table to update the UI
             renderAdminInventoryTable();
 
-            await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory }, "Profile Purged", `Scrubbed row metrics for ${target.name}.` );
+            // Transmit the updated inventory array (without the deleted item) to the cloud
+            await transmitCloudMutation(
+                "bulkUpdateInventory", 
+                { inventory: inventory }, 
+                "Profile Purged", 
+                `Scrubbed row metrics for ${target.name}.`
+            );
         }
 
         function createToast(title, message, type = "success") {
