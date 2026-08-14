@@ -401,6 +401,76 @@
             renderPartsGrid();
         }
 
+        // Smart Auto-Sync Variables & Logic
+        let autoSyncInterval = null;
+        let userActivityTimer = null;
+        let isUserIdle = false;
+        const IDLE_TIMEOUT_MS = 60000; // 60 seconds of no interaction = considered idle
+
+        function startSmartAutoSync() {
+            if (autoSyncInterval) clearInterval(autoSyncInterval);
+
+            // Runs every 45,000 ms (45 seconds)
+            autoSyncInterval = setInterval(async () => {
+                if (document.hidden || isUserIdle) {
+                    return; // Skip if tab is hidden or user walked away
+                }
+                await silentBackgroundSync();
+            }, 45000);
+        }
+
+        async function silentBackgroundSync() {
+            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.trim() === "") return;
+            try {
+                const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getData`, { method: "GET" });
+                if (!response.ok) return;
+                
+                const jsonResult = await response.json();
+                if (jsonResult && jsonResult.status === "success") {
+                    inventory = jsonResult.inventory || [];
+                    requests = jsonResult.requests || [];
+                    localStorage.setItem("ftc_vault_inventory", JSON.stringify(inventory));
+                    localStorage.setItem("ftc_vault_requests", JSON.stringify(requests));
+                    
+                    // Re-render UI elements quietly
+                    if (typeof renderPartsGrid === "function") renderPartsGrid();
+                    if (typeof renderCartList === "function") renderCartList();
+                    if (typeof renderPublicHistory === "function") renderPublicHistory();
+                    if (typeof renderAdminView === "function") renderAdminView();
+                    if (typeof updateGlobalBadges === "function") updateGlobalBadges();
+                }
+            } catch (err) {
+                console.log("Background sync paused/failed due to network.");
+            }
+        }
+
+        function resetIdleTimer() {
+            if (isUserIdle) {
+                isUserIdle = false;
+                setCloudIndicatorState("online", "Cloud database status: Sync fully active (Resumed).");
+            }
+
+            clearTimeout(userActivityTimer);
+            userActivityTimer = setTimeout(() => {
+                isUserIdle = true;
+                setCloudIndicatorState("online", "Cloud database status: Idle mode (Auto-sync paused).");
+            }, IDLE_TIMEOUT_MS);
+        }
+
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) {
+                setCloudIndicatorState("online", "Cloud database status: Tab hidden (Auto-sync paused).");
+            } else {
+                setCloudIndicatorState("online", "Cloud database status: Sync fully active.");
+                refreshDataFromCloud();
+            }
+        });
+
+        window.addEventListener("mousemove", resetIdleTimer);
+        window.addEventListener("keydown", resetIdleTimer);
+        window.addEventListener("click", resetIdleTimer);
+        window.addEventListener("scroll", resetIdleTimer);
+        
         window.onload = async function() {
             const savedAuth = sessionStorage.getItem("robo_vault_auth");
             if (savedAuth === "true") {
@@ -424,12 +494,29 @@
             renderPublicHistory();
             renderAdminView();
             updateGlobalBadges();
+            
 
             switchViewDirect(savedView);
             if (savedView === "admin") {
                 switchAdminSubTabDirect(savedSubTab);
             }
 
+            window.onload = async function() {
+            // ... your existing onload code ...
+
+            switchViewDirect(savedView);
+            if (savedView === "admin") {
+                switchAdminSubTabDirect(savedSubTab);
+            }
+
+            startSmartAutoSync();
+            resetIdleTimer();
+
+            document.getElementById("admin-passkey-input").addEventListener("keyup", function(e) {
+                if (e.key === "Enter") verifyAdminPasskey();
+            });
+        };
+            
             document.getElementById("admin-passkey-input").addEventListener("keyup", function(e) {
                 if (e.key === "Enter") verifyAdminPasskey();
             });
