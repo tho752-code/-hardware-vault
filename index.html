@@ -411,6 +411,13 @@
         let secondsRemaining = AUTO_SYNC_DELAY_MS / 1000;
         let countdownInterval = null;
 
+        function restartSmartAutoSync() {
+            // Reset countdown tracker
+            secondsRemaining = AUTO_SYNC_DELAY_MS / 1000;
+            // Restart the background sync and countdown interval loops cleanly
+            startSmartAutoSync();
+        }
+        
         function startSmartAutoSync() {
             if (autoSyncInterval) clearInterval(autoSyncInterval);
             if (countdownInterval) clearInterval(countdownInterval);
@@ -564,6 +571,7 @@
         }
 
         async function transmitCloudMutation(payloadAction, dataObj, successMessageTitle, successMessageBody) {
+            // Immediately commit changes to localStorage so local views retain correct data states
             localStorage.setItem("ftc_vault_inventory", JSON.stringify(inventory));
             localStorage.setItem("ftc_vault_requests", JSON.stringify(requests));
             
@@ -581,7 +589,22 @@
                     headers: { "Content-Type": "text/plain" },
                     body: JSON.stringify({ action: payloadAction, data: dataObj })
                 });
+                
+                setTimeout(async () => {
+                    await fetchCloudDatabaseRecords();
+                    renderFilterTabs();
+                    renderPartsGrid();
+                    renderCartList();
+                    renderPublicHistory();
+                    renderAdminView();
+                    updateGlobalBadges();
+                }, 1500);
+
                 setCloudIndicatorState("online", "Cloud database status: Sync fully active.");
+                
+                // ---> RESTART THE AUTOSYNC TIMER HERE <---
+                restartSmartAutoSync();
+
                 return true;
             } catch (error) {
                 console.error("Cloud mutation dropped sync:", error);
