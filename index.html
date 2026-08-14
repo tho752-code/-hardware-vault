@@ -729,7 +729,6 @@
             renderCartList();
         }
 
-        // FULLY AUTOMATED SUBMIT TICKET (No manual save required)
         async function submitRequestTicket() {
             try {
                 const nameInput = document.getElementById("req-name");
@@ -789,15 +788,21 @@
                 updateGlobalBadges();
                 switchViewDirect("browse");
 
-                // Transmit ticket & bulk inventory sync instantly to Google Sheet
+                // 1. Transmit the ticket data using the action name your Apps Script expects ("submitTicket")
                 await transmitCloudMutation(
                     "submitTicket", 
-                    { ticket: newTicketPayload, updatedInventory: inventory }, 
+                    newTicketPayload, 
                     "Ticket Dispatched", 
-                    `Filed ticket under identity: ${name}. Stock levels updated automatically.`
+                    `Filed ticket under identity: ${name}.`
                 );
 
-                await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory }, null, null);
+                // 2. Immediately send a second payload to update the inventory stock levels in the Google Sheet
+                await transmitCloudMutation(
+                    "bulkUpdateInventory", 
+                    { inventory: inventory }, 
+                    null, 
+                    null
+                );
 
             } catch (error) {
                 console.error("Critical submission trace:", error);
