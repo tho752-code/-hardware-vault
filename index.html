@@ -843,8 +843,15 @@
                 const itemsArray = Array.isArray(ticket.items) ? ticket.items : [];
                 itemsArray.forEach(itm => {
                     lineItems += `
-                        <li class="text-xs text-slate-300">
-                            <span class="font-mono text-amber-500">[${itm.sku || 'N/A'}]</span> ${itm.name} <strong class="text-slate-100 ml-1">x${itm.qty}</strong>
+                        <li class="text-xs text-slate-300 flex flex-col sm:flex-row sm:justify-between sm:items-center py-0.5 border-b border-slate-900/40 last:border-0">
+                            <div>
+                                <span class="font-mono text-amber-500">[${itm.sku || 'N/A'}]</span> 
+                                <span class="font-medium text-slate-200">${itm.name}</span> 
+                                <strong class="text-slate-100 ml-1">x${itm.qty}</strong>
+                            </div>
+                            <span class="text-[11px] font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800 w-fit mt-1 sm:mt-0">
+                                📍 ${itm.location || 'Bin Unassigned'}
+                            </span>
                         </li>
                     `;
                 });
@@ -869,7 +876,7 @@
                             ` : ''}
                         </div>
                     </div>
-                    <ul class="list-disc list-inside space-y-0.5 pl-1">${lineItems}</ul>
+                    <ul class="space-y-1.5 pl-1">${lineItems}</ul>
                     <div class="text-xs text-slate-500 bg-slate-900/20 px-2 py-1.5 rounded">Notes: "${ticket.notes}"</div>
                 `;
                 container.appendChild(historyCard);
