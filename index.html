@@ -297,7 +297,7 @@
     </footer>
 
     <script>
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1b6LKXOLJ4YJ7h8j7dgQyBg3ZiDen-uP_tGOdg5RUFg2cQMxSVh3CudmiIeH0VZJZ/exec"; 
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz-ruOm7yIEdOAOisw29vmFbIGoBReUTx-glTEhrgbuexMhC-KEiCxnz01MGFeRsz9Q/exec"; 
 
         const DEFAULT_INVENTORY = [
             { id: 1, name: "REV Robotics Control Hub", sku: "REV-31-1595", category: "Motors & Control", stock: 3, location: "Cabinet Alpha - Bin A1" },
@@ -785,6 +785,7 @@
                 notesInput.value = "";
 
                 renderCartList();
+                renderAdminInventoryTable(); // <-- Instantly updates Admin table stock counts
                 updateGlobalBadges();
                 switchViewDirect("browse");
 
@@ -923,7 +924,6 @@
             );
         }
 
-        // FULLY AUTOMATED REJECT TICKET (Updates values back and automatically updates Google Sheet)
         async function rejectTicket(ticketId) {
             try {
                 const ticket = requests.find(r => Number(r.id) === Number(ticketId));
@@ -938,6 +938,7 @@
 
                 ticket.status = "Denied";
                 renderAdminView();
+                renderAdminInventoryTable(); // <-- Instantly update admin stock manager view if open
                 updateGlobalBadges();
 
                 await transmitCloudMutation(
@@ -1047,7 +1048,7 @@
             inventory = inventory.filter(i => Number(i.id) !== Number(itemId));
             renderAdminInventoryTable();
 
-            await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory }, "Profile Purged", `Scrubbed row metrics for ${target.name}.`);
+            await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory }, "Profile Purged", `Scrubbed row metrics for ${target.name}.` );
         }
 
         function createToast(title, message, type = "success") {
