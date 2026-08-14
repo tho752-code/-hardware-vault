@@ -1082,16 +1082,38 @@
         function closeNewItemModal() { document.getElementById("new-item-drawer").classList.add("hidden"); }
 
         async function saveNewItem() {
-            const name = document.getElementById("add-item-name").value.trim();
-            const sku = document.getElementById("add-item-sku").value.trim().toUpperCase() || "N/A";
-            const category = document.getElementById("add-item-category").value;
-            const stock = parseInt(document.getElementById("add-item-stock").value) || 0;
-            const location = document.getElementById("add-item-location").value.trim() || "Unassigned Shelf Bin";
+            const nameInput = document.getElementById("add-item-name");
+            const skuInput = document.getElementById("add-item-sku");
+            const categorySelect = document.getElementById("add-item-category");
+            const stockInput = document.getElementById("add-item-stock");
+            const locationInput = document.getElementById("add-item-location");
+
+            const name = nameInput.value.trim();
+            const sku = skuInput.value.trim().toUpperCase() || "N/A";
+            const category = categorySelect.value;
+            const stock = parseInt(stockInput.value) || 0;
+            const location = locationInput.value.trim() || "Unassigned Shelf Bin";
 
             if (!name) {
                 createToast("Validation Error", "Item profiles require a valid name footprint.", "warning");
+                nameInput.focus();
                 return;
             }
+
+            const newItemNode = { id: Date.now(), name: name, sku: sku, category: category, stock: stock, location: location };
+            inventory.push(newItemNode);
+            renderAdminInventoryTable();
+            closeNewItemModal();
+
+            // Clear out all the input fields so they are empty next time you open the drawer
+            nameInput.value = "";
+            skuInput.value = "";
+            stockInput.value = "";
+            locationInput.value = "";
+            categorySelect.selectedIndex = 0; // Resets category dropdown to the first option
+
+            await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory }, "Catalog Expanded", `Loaded registry parameters for ${name}.`);
+        }
 
             const newItemNode = { id: Date.now(), name: name, sku: sku, category: category, stock: stock, location: location };
             inventory.push(newItemNode);
