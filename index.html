@@ -48,7 +48,7 @@
                     <span id="cart-badge" class="hidden bg-amber-500 text-slate-950 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
                 </button>
                 <button id="nav-history" onclick="switchView('history')" class="px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 whitespace-nowrap text-slate-400 hover:text-slate-200">
-                    Confirmed Requests
+                    Request Status
                 </button>
                 <button id="nav-admin" onclick="switchView('admin')" class="px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 whitespace-nowrap text-slate-400 hover:text-slate-200 flex items-center gap-1.5">
                     Hardware Desk (Admin)
@@ -82,7 +82,7 @@
             
             <div class="space-y-1">
                 <label for="admin-passkey-input" class="block text-[10px] font-bold uppercase tracking-wider text-slate-500">Security Passkey</label>
-                <input type="password" id="admin-passkey-input" placeholder="Enter password (Default: 1111)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm tracking-widest font-mono">
+                <input type="password" id="admin-passkey-input" placeholder="Enter password" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm tracking-widest font-mono">
                 <span id="auth-error-msg" class="text-xs text-rose-500 font-medium hidden">Incorrect passkey code. Verification failed.</span>
             </div>
 
@@ -198,8 +198,8 @@
         <section id="view-history" class="hidden space-y-6">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
                 <div>
-                    <h3 class="text-xl font-bold text-slate-100">Confirmed Request Archive Log</h3>
-                    <p class="text-xs text-slate-400">Public ledger tracking all completed, fulfilled, or denied tool allocation vouchers from your Google Sheet.</p>
+                    <h3 class="text-xl font-bold text-slate-100">Request Status Log</h3>
+                    <p class="text-xs text-slate-400">Public ledger tracking all completed, fulfilled, or denied requests.</p>
                 </div>
             </div>
             <div id="public-history-container" class="space-y-4"></div>
@@ -306,7 +306,7 @@
             { id: 4, name: "GoBilda Yellow Jacket Motor (435 RPM)", sku: "GB-5202-0435", category: "Motors & Control", stock: 8, location: "Cabinet Alpha - Drawer B2" }
         ];
 
-        const SECURITY_ADMIN_PASSKEY = "1111"; 
+        const SECURITY_ADMIN_PASSKEY = "19516"; 
 
         let inventory = [];
         let cart = {}; 
