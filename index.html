@@ -820,17 +820,22 @@
             if (!container) return;
             container.innerHTML = "";
 
-            const confirmedRequests = requests.filter(r => r.status === "Confirmed" || r.status === "Denied").sort((a, b) => b.id - a.id);
+            // Filters for Confirmed, Fulfilled, or Denied requests and sorts newest first
+            const confirmedRequests = requests.filter(r => r.status === "Confirmed" || r.status === "Fulfilled" || r.status === "Denied").sort((a, b) => b.id - a.id);
 
             if (confirmedRequests.length === 0) {
-                container.innerHTML = `<div class="text-center py-12 bg-slate-950 rounded-xl border border-slate-800 text-slate-500 text-sm">No historical confirmed requests logged yet.</div>`;
+                container.innerHTML = `<div class="text-center py-12 bg-slate-950 rounded-xl border border-slate-800 text-slate-500 text-sm">No historical requests logged yet.</div>`;
                 return;
             }
 
             confirmedRequests.forEach(ticket => {
                 const historyCard = document.createElement("div");
-                const isConfirmed = ticket.status === "Confirmed";
-                const borderClass = isConfirmed ? "border-emerald-950 bg-slate-950/40" : "border-rose-950 bg-slate-950/40";
+                const isFulfilled = ticket.status === "Fulfilled";
+                const isDenied = ticket.status === "Denied";
+                
+                let borderClass = "border-amber-950 bg-slate-950/40";
+                if (isFulfilled) borderClass = "border-emerald-950 bg-slate-950/40";
+                if (isDenied) borderClass = "border-rose-950 bg-slate-950/40";
                 
                 historyCard.className = `p-4 rounded-xl border ${borderClass} space-y-3`;
                 
@@ -844,6 +849,10 @@
                     `;
                 });
 
+                let badgeColor = "bg-amber-500/10 text-amber-400 border-amber-500/20";
+                if (isFulfilled) badgeColor = "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+                if (isDenied) badgeColor = "bg-rose-500/10 text-rose-400 border-rose-500/20";
+
                 historyCard.innerHTML = `
                     <div class="flex justify-between items-start border-b border-slate-900 pb-2">
                         <div>
@@ -851,7 +860,14 @@
                             <span class="text-[10px] ml-2 px-1.5 py-0.5 font-mono bg-slate-900 text-slate-400 rounded">${ticket.subteam}</span>
                             <p class="text-[10px] text-slate-500 font-mono mt-0.5">Processed on ${ticket.timestamp}</p>
                         </div>
-                        <span class="text-xs px-2.5 py-0.5 rounded-full font-bold ${isConfirmed ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}">${ticket.status}</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold border ${badgeColor}">${ticket.status}</span>
+                            ${!isDenied ? `
+                                <button onclick="toggleTicketFulfillment(${ticket.id})" class="text-[10px] font-semibold px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 transition-all border border-slate-700 shadow-sm" title="Toggle fulfillment tracking">
+                                    ${isFulfilled ? 'Mark Confirmed ↺' : 'Mark Fulfilled ✓'}
+                                </button>
+                            ` : ''}
+                        </div>
                     </div>
                     <ul class="list-disc list-inside space-y-0.5 pl-1">${lineItems}</ul>
                     <div class="text-xs text-slate-500 bg-slate-900/20 px-2 py-1.5 rounded">Notes: "${ticket.notes}"</div>
@@ -911,6 +927,24 @@
                 `;
                 container.appendChild(ticketCard);
             });
+        }
+
+        async function toggleTicketFulfillment(ticketId) {
+            const ticket = requests.find(r => Number(r.id) === Number(ticketId));
+            if (!ticket) return;
+
+            // Toggle back and forth between Confirmed and Fulfilled
+            ticket.status = ticket.status === "Fulfilled" ? "Confirmed" : "Fulfilled";
+
+            renderPublicHistory();
+            updateGlobalBadges();
+
+            await transmitCloudMutation(
+                "fulfillTicket", 
+                { ticketId: ticketId, status: ticket.status },
+                "Status Updated",
+                `Ticket status changed to ${ticket.status}.`
+            );
         }
 
         async function fulfillTicket(ticketId) {
