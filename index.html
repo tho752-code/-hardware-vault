@@ -412,9 +412,13 @@
         let countdownInterval = null;
 
         function restartSmartAutoSync() {
-            // Reset countdown tracker
+            // Reset countdown ticker back to full duration
             secondsRemaining = AUTO_SYNC_DELAY_MS / 1000;
-            // Restart the background sync and countdown interval loops cleanly
+            
+            // Clear active timers to prevent overlapping loops, then restart
+            if (autoSyncInterval) clearInterval(autoSyncInterval);
+            if (countdownInterval) clearInterval(countdownInterval);
+            
             startSmartAutoSync();
         }
         
@@ -602,7 +606,7 @@
 
                 setCloudIndicatorState("online", "Cloud database status: Sync fully active.");
                 
-                // ---> RESTART THE AUTOSYNC TIMER HERE <---
+                // This resets the auto-sync countdown graphic and restarts the timer loop fresh!
                 restartSmartAutoSync();
 
                 return true;
