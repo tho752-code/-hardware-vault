@@ -815,7 +815,7 @@
             if (!container) return;
             container.innerHTML = "";
 
-            const confirmedRequests = requests.filter(r => r.status === "Fulfilled" || r.status === "Denied");
+            const confirmedRequests = requests.filter(r => r.status === "Fulfilled" || r.status === "Denied").sort((a, b) => b.id - a.id);
 
             if (confirmedRequests.length === 0) {
                 container.innerHTML = `<div class="text-center py-12 bg-slate-950 rounded-xl border border-slate-800 text-slate-500 text-sm">No historical confirmed requests logged yet.</div>`;
@@ -866,7 +866,7 @@
             if (!container) return;
             container.innerHTML = "";
 
-            const pendingTickets = requests.filter(r => r.status === "Pending");
+            const pendingTickets = requests.filter(r => r.status === "Pending").sort((a, b) => b.id - a.id);
 
             if (pendingTickets.length === 0) {
                 container.innerHTML = `<div class="text-center py-12 bg-slate-950 rounded-xl border border-slate-800 text-slate-500 text-sm">No pending allocation tickets left inside queue stack rows.</div>`;
@@ -912,14 +912,14 @@
             const ticket = requests.find(r => Number(r.id) === Number(ticketId));
             if (!ticket) return;
 
-            ticket.status = "Fulfilled";
+            ticket.status = "Confirmed"; // FIX: Changed from "Fulfilled" to "Confirmed"
             renderAdminView();
             updateGlobalBadges();
 
             await transmitCloudMutation(
                 "fulfillTicket", 
                 { ticketId: ticketId },
-                "Voucher Approved",
+                "Voucher Confirmed", // FIX: Toast text update
                 "Allocation confirmed. Items officially deployed."
             );
         }
