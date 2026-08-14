@@ -405,18 +405,39 @@
         let autoSyncInterval = null;
         let userActivityTimer = null;
         let isUserIdle = false;
-        const IDLE_TIMEOUT_MS = 60000; // 60 seconds of no interaction = considered idle
+        const AUTO_SYNC_DELAY_MS = 45000; // 45 seconds
+        const IDLE_TIMEOUT_MS = 60000;    // 60 seconds of no interaction = considered idle
+        
+        let secondsRemaining = AUTO_SYNC_DELAY_MS / 1000;
+        let countdownInterval = null;
 
         function startSmartAutoSync() {
             if (autoSyncInterval) clearInterval(autoSyncInterval);
+            if (countdownInterval) clearInterval(countdownInterval);
 
+            secondsRemaining = AUTO_SYNC_DELAY_MS / 1000;
+
+            // Timer to show live countdown in the status bar
+            countdownInterval = setInterval(() => {
+                if (document.hidden || isUserIdle) return;
+                
+                secondsRemaining--;
+                if (secondsRemaining <= 0) {
+                    secondsRemaining = AUTO_SYNC_DELAY_MS / 1000;
+                }
+                
+                updateSyncBarDisplay("online", `Cloud database status: Sync fully active. Next auto-sync in ${secondsRemaining}s`);
+            }, 1000);
+
+            // Actual background sync interval loop
             autoSyncInterval = setInterval(async () => {
-                if (document.hidden) {
-                    return; // Only stops if tab is hidden
+                if (document.hidden || isUserIdle) {
+                    return; // Skip if tab is hidden or user is idle
                 }
                 console.log("Auto-sync interval firing...");
+                secondsRemaining = AUTO_SYNC_DELAY_MS / 1000;
                 await silentBackgroundSync();
-            }, 45000); // Set to 45 seconds
+            }, AUTO_SYNC_DELAY_MS);
         }
 
         async function silentBackgroundSync() {
@@ -447,6 +468,7 @@
         function resetIdleTimer() {
             if (isUserIdle) {
                 isUserIdle = false;
+                secondsRemaining = AUTO_SYNC_DELAY_MS / 1000;
                 setCloudIndicatorState("online", "Cloud database status: Sync fully active (Resumed).");
             }
 
@@ -461,6 +483,7 @@
             if (document.hidden) {
                 setCloudIndicatorState("online", "Cloud database status: Tab hidden (Auto-sync paused).");
             } else {
+                secondsRemaining = AUTO_SYNC_DELAY_MS / 1000;
                 setCloudIndicatorState("online", "Cloud database status: Sync fully active.");
                 refreshDataFromCloud();
             }
@@ -471,6 +494,12 @@
         window.addEventListener("click", resetIdleTimer);
         window.addEventListener("scroll", resetIdleTimer);
         
+        // Helper to update the text without overriding custom state styles unnecessarily
+        function updateSyncBarDisplay(state, traceMsg) {
+            if (isUserIdle || document.hidden) return; // Don't override idle/hidden messages with the countdown
+            setCloudIndicatorState(state, traceMsg);
+        }
+
         // --- SINGLE, CLEAN WINDOW.ONLOAD ---
         window.onload = async function() {
             const savedAuth = sessionStorage.getItem("robo_vault_auth");
@@ -501,7 +530,7 @@
                 switchAdminSubTabDirect(savedSubTab);
             }
 
-            // START SMART AUTO SYNC HERE CLEANLY
+            // START SMART AUTO SYNC & IDLE TIMERS
             startSmartAutoSync();
             resetIdleTimer();
 
