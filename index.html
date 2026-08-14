@@ -408,33 +408,30 @@
         }
 
         async function transmitCloudMutation(payloadAction, dataObj, successMessageTitle, successMessageBody) {
-    // Always persist locally first so your sandbox stays updated instantly
-    localStorage.setItem("ftc_vault_inventory", JSON.stringify(inventory));
-    localStorage.setItem("ftc_vault_requests", JSON.stringify(requests));
+            localStorage.setItem("ftc_vault_inventory", JSON.stringify(inventory));
+            localStorage.setItem("ftc_vault_requests", JSON.stringify(requests));
+            
+            if (successMessageTitle) {
+                createToast(successMessageTitle, successMessageBody, "success");
+            }
 
-    if (successMessageTitle) {
-        createToast(successMessageTitle, successMessageBody, "success");
-    }
+            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.trim() === "") return true;
 
-    if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.trim() === "") return true;
-
-    try {
-        setCloudIndicatorState("syncing", "Uploading cloud mutation logs...");
-        
-        await fetch(GOOGLE_SCRIPT_URL, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify({ action: payloadAction, data: dataObj })
-        });
-
-        setCloudIndicatorState("online", "Cloud database status: Sync fully active.");
-        return true;
-    } catch (error) {
-        console.error("Cloud mutation dropped sync:", error);
-        setCloudIndicatorState("offline", "Database network lag encountered.");
-        return false;
-    }
-}
+            try {
+                setCloudIndicatorState("syncing", "Uploading cloud mutation logs...");
+                await fetch(GOOGLE_SCRIPT_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify({ action: payloadAction, data: dataObj })
+                });
+                setCloudIndicatorState("online", "Cloud database status: Sync fully active.");
+                return true;
+            } catch (error) {
+                console.error("Cloud mutation dropped sync:", error);
+                setCloudIndicatorState("offline", "Database network error. Local sandbox active.");
+                return false;
+            }
+        }
 
         async function refreshDataFromCloud() {
             setCloudIndicatorState("syncing", "Syncing active cloud frames...");
