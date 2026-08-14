@@ -1098,6 +1098,10 @@
             const target = inventory.find(i => Number(i.id) === Number(itemId));
             if (!target) return;
 
+            // Added confirmation guard rail
+            const isConfirmed = confirm(`Are you sure you want to permanently delete "${target.name}" (SKU: ${target.sku}) from the hardware catalog?`);
+            if (!isConfirmed) return;
+
             inventory = inventory.filter(i => Number(i.id) !== Number(itemId));
             delete adminStockModifications[itemId];
 
