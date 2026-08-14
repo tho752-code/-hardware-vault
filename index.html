@@ -955,6 +955,9 @@
             }
         }
 
+        // Keep track of modified rows to show visual state changes
+        let adminStockModifications = {};
+
         function renderAdminInventoryTable() {
             const tbody = document.getElementById("admin-inventory-table");
             if (!tbody) return;
@@ -963,6 +966,15 @@
             inventory.forEach(item => {
                 const row = document.createElement("tr");
                 row.className = "hover:bg-slate-900/60 border-b border-slate-800/40 text-slate-300";
+                
+                // Check if this item has local unsaved modifications
+                const isModified = adminStockModifications[item.id] !== undefined;
+                
+                // Button style changes dynamically depending on whether it's modified
+                const btnClass = isModified 
+                    ? "px-3 py-1 rounded bg-amber-500/20 text-amber-300 font-bold text-xs transition-all border border-amber-500 shadow-sm animate-pulse flex items-center gap-1.5 hover:bg-amber-500/30" 
+                    : "px-3 py-1 rounded bg-slate-800 text-slate-400 font-bold text-xs transition-all border border-slate-700/60 flex items-center gap-1.5 hover:bg-slate-700";
+
                 row.innerHTML = `
                     <td class="p-3 font-medium text-slate-100">${item.name}</td>
                     <td class="p-3 font-mono text-xs text-amber-400 font-semibold">${item.sku || '—'}</td>
@@ -979,11 +991,11 @@
                     </td>
                     <td class="p-3 text-right">
                         <div class="flex justify-end items-center gap-3">
-                            <button id="save-stock-btn-${item.id}" onclick="commitStockChange(${item.id})" class="px-3 py-1 rounded bg-slate-800 text-slate-400 font-bold text-xs transition-all border border-slate-700/60 flex items-center gap-1.5 hover:bg-slate-700" title="Save Stock Changes to Cloud">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <button id="save-stock-btn-${item.id}" onclick="commitStockChange(${item.id})" class="${btnClass}" title="${isModified ? 'Unsaved edits pending sync!' : 'Stock count synced'}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 ${isModified ? 'text-amber-400' : 'text-slate-400'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
                                 </svg>
-                                Save
+                                ${isModified ? 'Unsaved*' : 'Save'}
                             </button>
                             <button onclick="deleteInventoryItemSchema(${item.id})" class="text-rose-500 hover:text-rose-400 p-1 text-sm font-bold" title="Delete Component">✕</button>
                         </div>
@@ -993,26 +1005,31 @@
             });
         }
 
-        async function quickUpdateStock(itemId, delta) {
+        function quickUpdateStock(itemId, delta) {
             const item = inventory.find(i => i.id === itemId);
             if (!item) return;
 
             item.stock = parseInt(item.stock) + delta;
             if (item.stock < 0) item.stock = 0;
 
-            document.getElementById(`admin-stock-val-${itemId}`).innerText = item.stock;
-            
-            await transmitCloudMutation("bulkUpdateInventory", { inventory: inventory }, null, null);
+            // Mark this item's stock as modified/unsaved
+            adminStockModifications[itemId] = true;
+
+            // Update just the number and button state live without re-rendering the whole table (prevents focus loss)
+            const stockValSpan = document.getElementById(`admin-stock-val-${itemId}`);
+            if (stockValSpan) stockValSpan.innerText = item.stock;
+
+            // Re-render just this table row or trigger a targeted UI update for the button
+            renderAdminInventoryTable();
         }
 
         async function commitStockChange(itemId) {
             const item = inventory.find(i => Number(i.id) === Number(itemId));
             if (!item) return;
 
-            const saveBtn = document.getElementById(`save-stock-btn-${itemId}`);
-            if (saveBtn) {
-                saveBtn.className = "px-3 py-1 rounded bg-slate-800 text-slate-400 font-bold text-xs transition-all border border-slate-700/60 opacity-60";
-            }
+            // Clear the modified flag once saved
+            delete adminStockModifications[itemId];
+            renderAdminInventoryTable();
 
             await transmitCloudMutation(
                 "bulkUpdateInventory", 
